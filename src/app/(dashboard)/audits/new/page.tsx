@@ -44,14 +44,44 @@ const APPLICABILITY_CRITERIA = [
   { key: "significantCreditInstitution", label: "Significant Credit Institution", description: "Classified under Regulation 1024/2013" },
 ];
 
-type ApplicabilityKey = typeof APPLICABILITY_CRITERIA[number]['key'];
+type ApplicabilityKey =
+  | 'microenterprise'
+  | 'dataReportingServiceProvider'
+  | 'centralSecuritiesDepository'
+  | 'centralCounterparty'
+  | 'paymentInstitutionExempted'
+  | 'institutionExempted201336'
+  | 'electronicMoneyInstitutionExempted'
+  | 'smallOccupationalRetirement'
+  | 'smallInterconnectedInvestment'
+  | 'significantCreditInstitution';
+
+interface ApplicabilityState {
+  [key: string]: boolean;
+  microenterprise: boolean;
+  dataReportingServiceProvider: boolean;
+  centralSecuritiesDepository: boolean;
+  centralCounterparty: boolean;
+  paymentInstitutionExempted: boolean;
+  institutionExempted201336: boolean;
+  electronicMoneyInstitutionExempted: boolean;
+  smallOccupationalRetirement: boolean;
+  smallInterconnectedInvestment: boolean;
+  significantCreditInstitution: boolean;
+}
 
 export default function NewAuditPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    organizationId: string;
+    newOrganizationName: string;
+    organizationType: string;
+    applicability: ApplicabilityState;
+  }>({
     name: "",
     organizationId: "",
     newOrganizationName: "",
@@ -260,7 +290,7 @@ export default function NewAuditPage() {
                 >
                   <Checkbox
                     id={criteria.key}
-                    checked={formData.applicability[criteria.key as ApplicabilityKey]}
+                    checked={formData.applicability[criteria.key]}
                     onCheckedChange={(checked) =>
                       handleApplicabilityChange(criteria.key as ApplicabilityKey, checked as boolean)
                     }

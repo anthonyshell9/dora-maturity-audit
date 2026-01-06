@@ -225,7 +225,7 @@ export default function ReportsPage() {
                         paddingAngle={2}
                         dataKey="value"
                         label={({ name, percent }) =>
-                          `${name} ${(percent * 100).toFixed(0)}%`
+                          `${name ?? ''} ${((percent ?? 0) * 100).toFixed(0)}%`
                         }
                       >
                         {complianceData.map((entry, index) => (
