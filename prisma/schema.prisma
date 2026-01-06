@@ -1,0 +1,205 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Organizations being audited
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  type        OrganizationType
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  audits      Audit[]
+  users       User[]
+
+  @@map("organizations")
+}
+
+enum OrganizationType {
+  MICROENTERPRISE
+  DATA_REPORTING_SERVICE_PROVIDER
+  CENTRAL_SECURITIES_DEPOSITORY
+  CENTRAL_COUNTERPARTY
+  PAYMENT_INSTITUTION_EXEMPTED
+  INSTITUTION_EXEMPTED_2013_36
+  ELECTRONIC_MONEY_INSTITUTION_EXEMPTED
+  SMALL_OCCUPATIONAL_RETIREMENT
+  SMALL_INTERCONNECTED_INVESTMENT
+  SIGNIFICANT_CREDIT_INSTITUTION
+  STANDARD
+}
+
+// Users
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  name           String?
+  role           UserRole @default(AUDITOR)
+  organizationId String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  audits         Audit[]
+  responses      Response[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  AUDITOR
+  VIEWER
+}
+
+// DORA Chapters (2-6)
+model Chapter {
+  id          Int      @id
+  title       String
+  description String?
+
+  articles    Article[]
+
+  @@map("chapters")
+}
+
+// DORA Articles within chapters
+model Article {
+  id        String  @id @default(cuid())
+  number    Int
+  title     String
+  chapterId Int
+
+  chapter   Chapter    @relation(fields: [chapterId], references: [id])
+  questions Question[]
+
+  @@unique([chapterId, number])
+  @@map("articles")
+}
+
+// DORA Questions (336 total)
+model Question {
+  id                  String   @id @default(cuid())
+  ref                 String   // e.g., "1.1", "2.3"
+  text                String
+  articleId           String
+  applicabilityRules  Json?    // Rules for when this question applies
+
+  article             Article    @relation(fields: [articleId], references: [id])
+  responses           Response[]
+
+  @@map("questions")
+}
+
+// Audit sessions
+model Audit {
+  id              String      @id @default(cuid())
+  name            String
+  status          AuditStatus @default(IN_PROGRESS)
+  organizationId  String
+  auditorId       String
+  applicability   Json        // Organization type selections affecting applicability
+  startedAt       DateTime    @default(now())
+  completedAt     DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  auditor         User         @relation(fields: [auditorId], references: [id])
+  responses       Response[]
+  reports         Report[]
+
+  @@map("audits")
+}
+
+enum AuditStatus {
+  IN_PROGRESS
+  COMPLETED
+  ARCHIVED
+}
+
+// Responses to questions
+model Response {
+  id          String         @id @default(cuid())
+  auditId     String
+  questionId  String
+  userId      String
+  answer      AnswerType
+  notes       String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  audit       Audit      @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  question    Question   @relation(fields: [questionId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
+  evidences   Evidence[]
+
+  @@unique([auditId, questionId])
+  @@map("responses")
+}
+
+enum AnswerType {
+  YES
+  NO
+  NA
+  NO_ANSWER
+}
+
+// Evidence files attached to responses
+model Evidence {
+  id          String   @id @default(cuid())
+  responseId  String
+  fileName    String
+  fileUrl     String
+  fileType    String
+  fileSize    Int
+  uploadedAt  DateTime @default(now())
+
+  response    Response @relation(fields: [responseId], references: [id], onDelete: Cascade)
+
+  @@map("evidences")
+}
+
+// Generated reports
+model Report {
+  id          String     @id @default(cuid())
+  auditId     String
+  type        ReportType
+  fileUrl     String
+  generatedAt DateTime   @default(now())
+
+  audit       Audit @relation(fields: [auditId], references: [id], onDelete: Cascade)
+
+  @@map("reports")
+}
+
+enum ReportType {
+  PDF
+  EXCEL
+  CSV
+}
+
+// Audit logs
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  resource   String
+  resourceId String?
+  details    Json?
+  ip         String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([resource, resourceId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

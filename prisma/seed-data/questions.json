@@ -1,0 +1,2354 @@
+[
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "1.1",
+    "question": "Do you have an internal governance and control framework to manage ICT risks?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "1.2",
+    "question": "Does your management body oversee the internal governance and control framework?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "2.1",
+    "question": "Do you have policies addressing the availability, authenticity, integrity and confidentiality of data? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "2.2",
+    "question": "Have these policies been implemented and tested to ensure they are effective and sufficient in scope?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "2.3",
+    "question": "Have these policies been communicated across the organisation?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "2.4",
+    "question": "Is there evidence that this is the case? For example, are risks allocated and actioned, and have you documented ownership of policies and procedures?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "3.1",
+    "question": "Has the management body set and approved a digital operational resilience strategy?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "4.1",
+    "question": "Has the management body approved, and does it oversee and periodically review, your ICT business continuity policy and ICT response and recovery plans?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "5.1",
+    "question": "Has the management body approved, and does it periodically review, ICT internal audit plans and ICT audits?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "6.1",
+    "question": "Has the management body allocated, and does it periodically review, the risk management budget to ensure that you have adequate resources to fulfil your digital operational resilience needs?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "7.1",
+    "question": "Has the management body approved, and does it periodically review, your policy on the use of third-party ICT service providers?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "8.1",
+    "question": "Do you have corporate-level reporting channels to keep you informed of third-party ICT service arrangements?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "8.2",
+    "question": "Do those reporting channels provide information on relevant planned changes to these arrangements?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "8.3",
+    "question": "Do those reporting channels provide information on the ways these changes will affect important business functions?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "8.4",
+    "question": "If so, does this information include risk analysis summaries for these changes and other ICT-related incidents?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "9.1",
+    "question": "Have you established a role or designated someone in senior management to monitor your ICT third-party service arrangements?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 5",
+    "title": "Governance and organisation",
+    "ref": "10.1",
+    "question": "Does the management body stay up to date with relevant ICT risks and the skills required to understand and assess them?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "1.1",
+    "question": "Do you have an ICT risk management framework as part of your overall risk management system? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "1.2",
+    "question": "Does this framework contain the strategies, policies, procedures, ICT protocols and tools necessary to protect information and ICT assets?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "1.3",
+    "question": "Do you deploy appropriate strategies, policies, procedures, protocols and tools to minimise ICT risks? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "2.1",
+    "question": "Do you have a method for providing the competent authority with information on ICT risk and your ICT risk management framework upon request?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "3.1",
+    "question": "Have you assigned the responsibility for managing and overseeing ICT risk to a control function? It should have an appropriate level of independence to avoid conflicts of interest."
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "4.1",
+    "question": "Is there appropriate segregation and independence of ICT risk management functions, control functions and internal audit functions?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "5.1",
+    "question": "Do you have documented instructions to review the ICT risk management framework at least once a year?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "6.1",
+    "question": "Do you have documented instructions to review the ICT risk management framework periodically? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "7.1",
+    "question": "Do you have documented instructions to review the ICT risk management framework following major ICT-related incidents?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "8.1",
+    "question": "Do you have documented instructions to review the ICT risk management framework when it is deemed necessary following supervisory instruction, digital operational resilience testing or audit processes?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "9.1",
+    "question": "Is the ICT risk management framework subject to a formal continual improvement process?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "10.1",
+    "question": "Do you have a process for submitting reports on your ICT risk management framework to the competent authority upon request?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "11.1",
+    "question": "Do you perform regular internal audits of your ICT risk management framework in line with your audit plan? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "11.2",
+    "question": "Are these audits performed by individuals with relevant knowledge, experience and appropriate independence?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "11.4",
+    "question": "Do you have a formal process to follow up on the results of the internal audit?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "12.1",
+    "question": "Do you have a digital operational resilience strategy setting out how the risk management framework should be implemented? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "12.2",
+    "question": "Does this strategy explain how the ICT risk management framework supports your business objectives?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "12.3",
+    "question": "Does this strategy establish your ICT risk tolerance?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "12.4",
+    "question": "Does this strategy set out information security objectives, including key performance indicators and key risk metrics?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "12.5",
+    "question": "Does this strategy explain the ICT reference architecture and any changes needed to reach specific business objectives?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "12.6",
+    "question": "Does this strategy outline mechanisms you have put in place to detect ICT-related incidents and protect you from damage?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "12.7",
+    "question": "Does this strategy provide evidence of your current digital operational resilience, detailing the number of major ICT-related incidents you have reported and the effectiveness of your preventive measures?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "12.8",
+    "question": "Does this strategy include plans for digital operational resilience testing?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "12.9",
+    "question": "Does this strategy outline communication plans in the event of ICT-related incidents?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "13.1",
+    "question": "Where applicable, have you defined a holistic ICT multi-vendor strategy?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "13.2",
+    "question": "If so, does this strategy show key relationships between third-party ICT service providers? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "13.3",
+    "question": "If so, does this strategy explain the rationale behind the procurement mix of your third-party ICT service providers?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "14.1",
+    "question": "Where applicable, have you outsourced the tasks of verifying compliance with ICT risk management requirements? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 6",
+    "title": "ICT risk management framework",
+    "ref": "14.2",
+    "question": "If so, have you ensured that you take full responsibility for verifying compliance?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 7",
+    "title": "ICT systems, protocols and tools",
+    "ref": "1.1",
+    "question": "Are your ICT systems, protocols and tools appropriate for the scale of your activities?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 7",
+    "title": "ICT systems, protocols and tools",
+    "ref": "2.1",
+    "question": "Are these ICT systems, protocols and tools reliable?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 7",
+    "title": "ICT systems, protocols and tools",
+    "ref": "3.1",
+    "question": "Can these ICT systems, protocols and tools process data and provide services in an accurate and timely manner?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 7",
+    "title": "ICT systems, protocols and tools",
+    "ref": "4.1",
+    "question": "Are these ICT systems, protocols and tools technologically resilient and able to handle additional information processing needs when necessary?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "1.1",
+    "question": "Have you identified, classified and adequately documented ICT-supported business functions, roles and responsibilities, information assets and the ICT assets supporting those functions?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "1.2",
+    "question": "Does this include their roles and dependencies in relation to ICT risk?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "1.3",
+    "question": "Do you review this classification and any other relevant documentation at least annually?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "2.1",
+    "question": "Do you continually identify all sources of ICT risk?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "3.1",
+    "question": "Do you continually assess cyber threats and ICT vulnerabilities relevant to your ICT-supported business functions, information assets and ICT assets? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "4.1",
+    "question": "Do you have documented plans to review risk scenarios at least annually?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "5.1",
+    "question": "Do you perform risk assessments following significant changes to your network and information system infrastructure?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "6.1",
+    "question": "Do you perform risk assessments when there are changes to processes or procedures that impact ICT-supported business functions, information assets or ICT assets?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "7.1",
+    "question": "Have you identified all information assets and ICT assets, including those on remote sites, network resources and hardware equipment? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "8.1",
+    "question": "Have you identified and mapped critical assets?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "9.1",
+    "question": "Have you mapped the configuration of those assets and the links and interdependencies between them?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "10.1",
+    "question": "Have you identified and documented all processes that depend on third-party ICT service providers?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "11.1",
+    "question": "Have you identified the connections between ICT third-party services that support critical or important functions?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "12.1",
+    "question": "Do you maintain inventories of ICT-supported business functions, information assets and ICT assets?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "12.2",
+    "question": "Do you update these inventories periodically and whenever there are changes to your information system infrastructure or your processes and procedures related to ICT-supported business functions, information assets or ICT assets?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "13.1",
+    "question": "Do you conduct a specific ICT risk assessment on all legacy ICT systems at least annually?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 8",
+    "title": "Identification",
+    "ref": "13.2",
+    "question": "Do you conduct such an assessment before and after connecting technologies, applications or systems?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "1.1",
+    "question": "Do you continually monitor and control the security and functioning of ICT systems and tools? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "2.1",
+    "question": "Do you have appropriate ICT security tools, policies and procedures to minimise relevant risks?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "3.1",
+    "question": "Do you have ICT security policies, procedures, protocols and tools that ensure the resilience, continuity and availability of ICT systems?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "4.1",
+    "question": "Do you have ICT security policies, procedures, protocols and tools to maintain high standards of availability, authenticity, integrity and confidentiality of data?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "5.1",
+    "question": "Have you deployed ICT solutions and processes to secure data in transit?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "6.1",
+    "question": "Have you deployed ICT solutions and processes to minimise the risk of corruption or loss of data, unauthorised access and technical flaws that may hinder business activity?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "7.1",
+    "question": "Have you deployed ICT solutions and processes to minimise the risk of unauthorised access?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "8.1",
+    "question": "Have you deployed ICT solutions and processes to minimise the risk of technical flaws that may hinder business activity?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "9.1",
+    "question": "Have you deployed ICT solutions and processes to protect data from data management risks, such as poor administration, processing-related risks and human error?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "10.1",
+    "question": "Do you have an information security policy that defines rules on protecting the availability, authenticity, integrity and confidentiality of data, information assets and ICT assets?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "10.2",
+    "question": "Where applicable, does this information security policy cover third parties' information assets and ICT assets?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "11.1",
+    "question": "Have you taken a risk-based approach to establish a network and infrastructure management structure?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "11.2",
+    "question": "Does this structure use appropriate techniques, methods and protocols, such as automated mechanisms to isolate affected information assets in the event of a cyber attack?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "12.1",
+    "question": "Do you have access control policies governing the physical or logical access to information assets and ICT assets?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "13.1",
+    "question": "Do you have authentication mechanisms in place that are based on relevant standards and control systems?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "14.1",
+    "question": "Do you have encryption policies and protocols in place based on data classification and the results of your ICT risk assessment?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "15.1",
+    "question": "Do you have ICT change management policies, procedures and controls?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "15.2",
+    "question": "Do these policies, procedures and controls cover changes to software, hardware, firmware components, systems and security parameters?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "15.3",
+    "question": "Are all changes to ICT systems recorded, tested, assessed, approved, implemented and verified in a controlled manner?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "16.1",
+    "question": "Do you have appropriate and comprehensive policies for patches and updates?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "17.1",
+    "question": "Have you designed your network connection infrastructure such that it can be instantaneously severed or segmented?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "18.1",
+    "question": "Is the ICT change management process approved by appropriate lines of management?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 9",
+    "title": "Protection and prevention",
+    "ref": "19.1",
+    "question": "Are there specific protocols in place for the ICT change management process?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 10",
+    "title": "Detection",
+    "ref": "1.1",
+    "question": "Do you have mechanisms to detect anomalous activities and any potential single points of failure?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 10",
+    "title": "Detection",
+    "ref": "1.2",
+    "question": "Are these detection mechanisms regularly tested?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 10",
+    "title": "Detection",
+    "ref": "1.3",
+    "question": "Do these detection mechanisms have multiple layers of control?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 10",
+    "title": "Detection",
+    "ref": "1.4",
+    "question": "Do these detection mechanisms have defined alert thresholds?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 10",
+    "title": "Detection",
+    "ref": "1.5",
+    "question": "Do these detection mechanisms have defined criteria to trigger and initiate ICT-related incident response processes?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 10",
+    "title": "Detection",
+    "ref": "2.1",
+    "question": "Do you have adequate resources to monitor user activity, ICT anomalies and ICT-related incidents, including cyber attacks?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 10",
+    "title": "Detection",
+    "ref": "3.1",
+    "question": "Do you have a system in place to check trade reports for completeness, identify omissions and obvious errors, and request retransmission of those reports?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "1.1",
+    "question": "Do you have an ICT business continuity policy that contains dedicated, appropriate and documented arrangements, plans, procedures and mechanisms?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "1.2",
+    "question": "Does this policy ensure the continuity of your critical or important functions?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "1.3",
+    "question": "Does this policy ensure that you quickly, appropriately and effectively respond to and resolve all ICT-related incidents in a way that limits damage and prioritises the resumption of activities and recovery actions?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "1.4",
+    "question": "Does this policy outline containment, response and recovery measures that are tailored to each type of ICT-related incident?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "1.5",
+    "question": "Does this policy contain an approach for estimating preliminary impacts, damages and losses?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "1.6",
+    "question": "Does this policy set out communication and crisis management actions that ensure that updated information is transmitted to all relevant internal staff, external stakeholders and competent authorities?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "2.1",
+    "question": "Have you implemented ICT response and recovery plans?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "2.2",
+    "question": "Are these ICT response and recovery plans subject to independent internal audit reviews?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "3.1",
+    "question": "Have you implemented ICT business continuity plans for critical and important functions, including those that are outsourced or contracted through ICT third-party service providers?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "3.2",
+    "question": "Do you maintain and periodically test these ICT business continuity plans?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "4.1",
+    "question": "Do you conduct a business impact analysis (BIA) for incidents that could result in severe disruption?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "4.2",
+    "question": "Does the BIA assess the potential impact of business disruptions using quantitative and qualitative criteria, internal and external data, and scenario analysis, as appropriate?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "4.3",
+    "question": "Does the BIA consider the criticality of identified and mapped business functions, support processes, third-party dependencies, information assets and their interdependencies?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "4.4",
+    "question": "Does the design and use of your ICT assets and services align fully with the results of your BIA?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "5.1",
+    "question": "Do you have documented instructions to test the ICT business continuity plans and ICT response and recovery plans at least annually and whenever there are substantive changes to ICT systems supporting critical or important functions?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "6.1",
+    "question": "Do you have crisis communication plans that set out clear procedures to manage internal and external crisis communications?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "6.2",
+    "question": "Do you regularly test these plans?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "7.1",
+    "question": "Do your ICT business continuity plans and ICT response and recovery plans cover cyber attacks and switchovers between primary and redundant or backup facilities?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "8.1",
+    "question": "Do you keep a readily accessible record of actions taken before and during disruptive events that required you to activate your ICT business continuity and response and recovery plans?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "9.1",
+    "question": "Are you able to provide the results of ICT business continuity tests, or of similar exercises, to competent authorities upon request?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 11",
+    "title": "Response and recovery",
+    "ref": "10.1",
+    "question": "Are you able to give competent authorities an estimate of aggregated annual costs and losses caused by major ICT-related incidents upon request?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "1.1",
+    "question": "Do you have policies and procedures for backing up systems and data?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "1.2",
+    "question": "Do these policies and procedures define the scope and frequency of backups?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "2.1",
+    "question": "Do you have procedures and methods for restoring and recovering data and systems?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "3.1",
+    "question": "Do you have backup systems that can be activated in accordance with these policies, procedures and methods?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "3.2",
+    "question": "Have you ensured that activating your backup systems will not jeopardise the security of the network and information systems, or the availability, authenticity, integrity or confidentiality of data? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "3.3",
+    "question": "Do you periodically test the procedures for backups and restoration and recovery?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "3.4",
+    "question": "Are the ICT systems you use for backups physically and logically segregated from the source ICT system?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "3.5",
+    "question": "Are these ICT systems protected from unauthorised access or ICT corruption? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "3.6",
+    "question": "Do these ICT systems allow for the timely restoration of services, using data and system backups as necessary?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "4.1",
+    "question": "Do your recovery plans enable you to recover all transactions at the time of disruption, allowing you to continue operating on schedule?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "5.1",
+    "question": "Do you have adequate resources, including backup and restoration facilities, to ensure that services can be offered and maintained at all times?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "6.1",
+    "question": "Do you maintain redundant ICT capacities equipped with resources, capabilities and functions that are adequate to ensure business needs? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "6.2",
+    "question": "Have you assessed the need to maintain redundant ICT capacities based on your risk profile?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "7.1",
+    "question": "Do you have at least one secondary processing site with the necessary resources, capabilities, functions and staffing arrangements to maintain business needs?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "7.2",
+    "question": "Are secondary processing site(s) in a different location from the primary one?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "7.3",
+    "question": "Can secondary processing site(s) provide critical or important functions identically to the primary location, or maintain a level of service necessary to ensure that critical operations remain within the recovery objectives?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "7.4",
+    "question": "Is the secondary processing facility immediately accessible to staff in the event that the primary processing site is unavailable?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "8.1",
+    "question": "When setting each function’s recovery time and recovery point objectives, do you take into account whether it is critical or important and the potential overall impact it has on market efficiency?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "9.1",
+    "question": "Do recovery time objectives ensure that the agreed service levels are met even in extreme scenarios?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "10.1",
+    "question": "Have you documented plans to check whether data integrity has been maintained following an ICT-related incident?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 12",
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "ref": "10.2",
+    "question": "Do these plans cover data reconstruction from external stakeholders?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "1.1",
+    "question": "Do you have capabilities and staff to gather information on vulnerabilities, cyber threats and ICT-related incidents and to analyse the impacts they might have on your digital operational resilience?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "2.1",
+    "question": "Do you have documented plans to review ICT incidents that disrupt your core activities? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "2.2",
+    "question": "Do these reviews analyse the causes of disruption and identify improvements you can make to the ICT operations or ICT business continuity policy?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "2.3",
+    "question": "Do you have a process for explaining the changes you implemented following ICT incident reviews to competent authorities?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "2.4",
+    "question": "Do these reviews determine whether established procedures were followed and whether the actions you took were effective? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "2.5",
+    "question": "Do these reviews examine the speed with which you responded to security alerts and determined the impact and severity of ICT incidents?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "2.6",
+    "question": "Do these reviews examine the quality and speed of your forensic analysis, where deemed appropriate?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "2.7",
+    "question": "Do these reviews examine the effectiveness of incident escalation?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "2.8",
+    "question": "Do these reviews examine the effectiveness of your internal and external communication?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "3.1",
+    "question": "Do your risk assessments incorporate lessons learned from digital operational resilience testing?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "4.1",
+    "question": "Do your risk assessments incorporate lessons learned from real-life ICT-related incidents?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "5.1",
+    "question": "Do your risk assessments incorporate lessons learned from activating your ICT business continuity plans and ICT response and recovery plans?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "6.1",
+    "question": "Do your risk assessments incorporate the knowledge you've gained from sharing information with counterparts?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "7.1",
+    "question": "Do your risk assessments incorporate lessons learned from supervisory reviews?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "8.1",
+    "question": "Do you use these lessons to conduct informed reviews of the relevant components of your ICT risk management framework?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "9.1",
+    "question": "Do you monitor the effectiveness of your digital operational resilience strategy?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "10.1",
+    "question": "Do you map the evolution of ICT risk over time?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "11.1",
+    "question": "Do you analyse the magnitude, frequency and types of ICT incidents that impact critical or important functions?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "12.1",
+    "question": "Do senior ICT staff report to management at least once a year to summarise lessons learned?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "12.2",
+    "question": "As part of this process, do senior ICT staff provide recommendations for operational resilience and business continuity?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "13.1",
+    "question": "Do your staff training schemes include mandatory ICT security awareness programmes and digital operational resilience training?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "13.2",
+    "question": "Are these programmes applicable to all employees, including senior management? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "13.3",
+    "question": "Do these programmes provide a level of complexity that is appropriate to users’ roles and responsibilities?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "14.1",
+    "question": "Do you include ICT third-party service providers in relevant training schemes, where appropriate?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "15.1",
+    "question": "Do you keep up to date with the ways technology can affect ICT security requirements and digital operational resilience?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 13",
+    "title": "Learning and evolving",
+    "ref": "16.1",
+    "question": "Do you keep up to date with the latest ICT risk management processes?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 14",
+    "title": "Communication",
+    "ref": "1.1",
+    "question": "Do you have crisis communication plans that enable you to disclose major ICT-related incidents and vulnerabilities to clients, counterparts and the public, as appropriate?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 14",
+    "title": "Communication",
+    "ref": "2.1",
+    "question": "Do you have communication policies for internal staff and for external stakeholders?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 14",
+    "title": "Communication",
+    "ref": "3.1",
+    "question": "Do these policies differentiate between staff involved in ICT risk management and those who need to be informed of your processes and procedures?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 14",
+    "title": "Communication",
+    "ref": "4.1",
+    "question": "Have you identified someone, or a group, to oversee the external communication strategy for ICT-related incidents?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "1.1",
+    "question": "Do you have an ICT risk management framework containing measures to manage ICT risk?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "1.2",
+    "question": "Do you regularly test these measures?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "2.1",
+    "question": "Do you continually monitor the security and functioning of all ICT systems?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "2.2",
+    "question": "Do you regularly test the monitoring processes?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "3.1",
+    "question": "Do you use ICT systems, protocols and tools to minimise the impact of ICT risk?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "3.2",
+    "question": "Do you regularly test these systems, protocols and tools?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "4.1",
+    "question": "Do you promptly identify, detect and respond to sources of ICT risk and anomalies in your network and information systems?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "5.1",
+    "question": "Have you identified key dependencies on ICT third-party service providers, where relevant?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "6.1",
+    "question": "Do you have business continuity plans and response and recovery measures, including backup and restoration measures?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "6.2",
+    "question": "Do you regularly test these plans and measures?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "6.3",
+    "question": "Do you implement relevant changes to your risk assessment process based on the results of those tests? "
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "6.4",
+    "question": "Do you implement relevant changes to your risk assessment process based on post-incident analysis?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "8.1",
+    "question": "Are your staff required to take ICT security awareness programmes and digital operational resilience training?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "9.1",
+    "question": "Do you review your ICT risk management framework periodically and following major ICT-related incidents?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "9.2",
+    "question": "Is the framework continually improved?"
+  },
+  {
+    "chapter": 2,
+    "article": "Article 16",
+    "title": "Simplified ICT risk management framework",
+    "ref": "10.1",
+    "question": "Do you have a process for submitting reports on your ICT risk management framework to the competent authority if requested?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 17",
+    "title": "ICT-related incident management process",
+    "ref": "1.1",
+    "question": "Have you established an ICT-related incident management process to detect, manage and notify those appropriate of ICT-related incidents?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 17",
+    "title": "ICT-related incident management process",
+    "ref": "2.1",
+    "question": "Do you keep a record of all ICT-related incidents and significant cyber threats?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 17",
+    "title": "ICT-related incident management process",
+    "ref": "3.1",
+    "question": "Do you have procedures and processes that ensure ICT-related incidents are monitored, handled and followed up on in a consistent and integrated way?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 17",
+    "title": "ICT-related incident management process",
+    "ref": "3.2",
+    "question": "Do these procedures and processes ensure that the root causes of incidents are identified, documented and addressed?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 17",
+    "title": "ICT-related incident management process",
+    "ref": "3.3",
+    "question": "Does this process include early warning indicators?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 17",
+    "title": "ICT-related incident management process",
+    "ref": "3.4",
+    "question": "Does this process include procedures to identify, track, log, categorise and classify ICT-related incidents according to their priority, severity and the criticality of impacted services?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 17",
+    "title": "ICT-related incident management process",
+    "ref": "3.5",
+    "question": "Does this process include assigned roles and responsibilities that are activated following specified ICT-related incident types and scenarios?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 17",
+    "title": "ICT-related incident management process",
+    "ref": "3.6",
+    "question": "Does this process include plans for internal and external communication, including client notification, internal escalation procedures and information provided to financial entities that act as counterparts, as appropriate?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 17",
+    "title": "ICT-related incident management process",
+    "ref": "3.7",
+    "question": "Does this process ensure that major ICT-related incidents are reported to relevant senior management? These reports should describe the impact of the incident, response measures and additional controls that may be established."
+  },
+  {
+    "chapter": 3,
+    "article": "Article 17",
+    "title": "ICT-related incident management process",
+    "ref": "3.8",
+    "question": "Does this process establish ICT-related incident response procedures to mitigate adverse impacts and ensure that services become operational and secure in a timely manner?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 18",
+    "title": "Classification of ICT-related incidents and cyber threats",
+    "ref": "1.1",
+    "question": "Do you classify ICT-related incidents and determine their impact based on the number and/or relevance of clients and financial counterparts, as well as the number of transactions affected and potential reputational damage, where relevant?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 18",
+    "title": "Classification of ICT-related incidents and cyber threats",
+    "ref": "2.1",
+    "question": "Do you classify ICT-related incidents and determine their impact based on the duration of the incident, including service downtime?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 18",
+    "title": "Classification of ICT-related incidents and cyber threats",
+    "ref": "3.1",
+    "question": "Do you classify ICT-related incidents and determine their impact based on the geographical spread of the incident?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 18",
+    "title": "Classification of ICT-related incidents and cyber threats",
+    "ref": "4.1",
+    "question": "Do you classify ICT-related incidents and determine their impact based on the loss of availability, authenticity, integrity or confidentiality of data?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 18",
+    "title": "Classification of ICT-related incidents and cyber threats",
+    "ref": "5.1",
+    "question": "Do you classify ICT-related incidents and determine their impact based on how critical the affected services are?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 18",
+    "title": "Classification of ICT-related incidents and cyber threats",
+    "ref": "6.1",
+    "question": "Do you classify ICT-related incidents and determine their impact based on their economic impact?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 18",
+    "title": "Classification of ICT-related incidents and cyber threats",
+    "ref": "7.1",
+    "question": "Do you classify cyber threats as significant based on how critical the at-risk services are, the geographical spread of those services and the number and/or relevance of clients and financial counterparts targeted?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 19",
+    "title": "Reporting of major ICT-related incidents and voluntary notification of significant cyber threats",
+    "ref": "1.1",
+    "question": "Do you have a process for reporting major ICT-related incidents to the relevant competent authority?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 19",
+    "title": "Reporting of major ICT-related incidents and voluntary notification of significant cyber threats",
+    "ref": "2.1",
+    "question": "Do you have a process for reporting major ICT-related incidents to the relevant national competent authority?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 19",
+    "title": "Reporting of major ICT-related incidents and voluntary notification of significant cyber threats",
+    "ref": "3.1",
+    "question": "Do you have a process for producing an initial notification report and submitting it to the competent authority or authorities?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 19",
+    "title": "Reporting of major ICT-related incidents and voluntary notification of significant cyber threats",
+    "ref": "3.2",
+    "question": "Do these initial notification reports include all necessary information for the competent authority or authorities to determine the significance of the major ICT-related incident and assess possible cross-border impacts?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 19",
+    "title": "Reporting of major ICT-related incidents and voluntary notification of significant cyber threats",
+    "ref": "4.1",
+    "question": "Do you have a plan to inform clients about major ICT-related incidents that affect their financial interests?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 19",
+    "title": "Reporting of major ICT-related incidents and voluntary notification of significant cyber threats",
+    "ref": "4.2",
+    "question": "Do these plans explain the measures you have taken to mitigate the damage?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 19",
+    "title": "Reporting of major ICT-related incidents and voluntary notification of significant cyber threats",
+    "ref": "4.3",
+    "question": "Do your plans include information on the ways affected clients can protect themselves in the event of significant cyber threats?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 19",
+    "title": "Reporting of major ICT-related incidents and voluntary notification of significant cyber threats",
+    "ref": "5.1",
+    "question": "Have you ensured that an initial notification can be sent to the relevant competent authority within the relevant deadline?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 19",
+    "title": "Reporting of major ICT-related incidents and voluntary notification of significant cyber threats",
+    "ref": "6.1",
+    "question": "Have you ensured that an intermediate report can be sent as soon as the status of the original incident, or the way it is being handled, changes significantly?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 19",
+    "title": "Reporting of major ICT-related incidents and voluntary notification of significant cyber threats",
+    "ref": "7.1",
+    "question": "Have you ensured that subsequent updated notifications can be sent whenever there is a relevant status update or when requested by the competent authority?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 19",
+    "title": "Reporting of major ICT-related incidents and voluntary notification of significant cyber threats",
+    "ref": "8.1",
+    "question": "Have you ensured that a final report can be sent when the root-cause analysis has been completed and when the impact figures are available?"
+  },
+  {
+    "chapter": 3,
+    "article": "Article 19",
+    "title": "Reporting of major ICT-related incidents and voluntary notification of significant cyber threats",
+    "ref": "9.1",
+    "question": "If you outsource your reporting obligations to a third-party service provider, are you able to demonstrate full responsibility for fulfilling the incident reporting requirements?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 24",
+    "title": "General requirements for the performance of digital operational resilience testing",
+    "ref": "1.1",
+    "question": "Have you created a digital operational resilience testing programme?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 24",
+    "title": "General requirements for the performance of digital operational resilience testing",
+    "ref": "1.2",
+    "question": "Do you regularly review this testing programme?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 24",
+    "title": "General requirements for the performance of digital operational resilience testing",
+    "ref": "1.3",
+    "question": "Does the digital operational resilience testing programme include a range of assessments, tests, methodologies, practices and tools?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 24",
+    "title": "General requirements for the performance of digital operational resilience testing",
+    "ref": "1.4",
+    "question": "Does your digital operational resilience testing programme follow a risk-based approach?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 24",
+    "title": "General requirements for the performance of digital operational resilience testing",
+    "ref": "1.5",
+    "question": "Are tests carried out by independent parties, whether internal or external? "
+  },
+  {
+    "chapter": 4,
+    "article": "Article 24",
+    "title": "General requirements for the performance of digital operational resilience testing",
+    "ref": "2.1",
+    "question": "Where tests are carried out by an internal tester, do you provide sufficient resources?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 24",
+    "title": "General requirements for the performance of digital operational resilience testing",
+    "ref": "3.1",
+    "question": "Where tests are carried out by an internal tester, do you ensure that conflicts of interest are avoided throughout the design and execution phases?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 24",
+    "title": "General requirements for the performance of digital operational resilience testing",
+    "ref": "4.1",
+    "question": "Do you have procedures and policies to prioritise, classify and remedy all issues revealed throughout these tests?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 24",
+    "title": "General requirements for the performance of digital operational resilience testing",
+    "ref": "5.1",
+    "question": "Do you have internal validation methodologies to determine whether all identified weaknesses, deficiencies and gaps are fully addressed?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 24",
+    "title": "General requirements for the performance of digital operational resilience testing",
+    "ref": "6.1",
+    "question": "Do you conduct tests on all ICT systems and applications that support critical or important functions at least annually?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 25",
+    "title": "Testing of ICT tools and systems",
+    "ref": "1.1",
+    "question": "Does the digital operational resilience testing programme support appropriate tests, such as vulnerability assessments and scans, open-source analyses, network security assessments, gap analyses, physical security reviews, questionnaires and scanning software solutions, source code reviews, scenario-based tests, compatibility testing, performance testing, end-to-end testing and penetration testing?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 25",
+    "title": "Testing of ICT tools and systems",
+    "ref": "2.1",
+    "question": "Do you perform vulnerability assessments before deploying or redeploying applications, infrastructure components and ICT services supporting critical or important functions?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 25",
+    "title": "Testing of ICT tools and systems",
+    "ref": "3.1",
+    "question": "Do you test your ICT systems using a combination of a risk-based approach and strategic planning? You should consider available resources, the time to be allocated to the ICT testing, as well as the urgency of the assessment, the type of risk and the criticality of information assets and of services provided."
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "1.1",
+    "question": "Do you carry out threat-led penetration testing at least every three years? "
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "1.2",
+    "question": "Does each threat-led penetration test cover critical or important functions?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "1.3",
+    "question": "Is each threat-led penetration test performed on live production systems that support such functions?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "2.1",
+    "question": "Have you identified all relevant underlying ICT systems, processes and technologies that support critical or important functions and ICT services, including those that have been outsourced or contracted to third parties?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "3.1",
+    "question": "Have you assessed which critical or important functions need to be covered by your threat-led penetration tests?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "3.2",
+    "question": "Does the result of this assessment determine the precise scope of your threat-led penetration tests?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "4.1",
+    "question": "Is the scope of your threat-led penetration tests validated by the competent authorities?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "5.1",
+    "question": "Where ICT third-party service providers are included in the scope of these tests, have you implemented the necessary measures and safeguards to ensure that they participate?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "6.1",
+    "question": "Where pooled testing is used, does it cover the relevant range of ICT services supporting critical or important functions contracted to the respective ICT third-party service provider? "
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "6.2",
+    "question": "Where pooled testing is used, have you considered the number of third parties participating and the complexity and types of services they provide?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "7.1",
+    "question": "Do you work with relevant third parties, including ICT service providers, to apply risk management controls that mitigate the risks of threat-led penetration testing?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "8.1",
+    "question": "Do you give the relevant public authority a summary of the relevant findings of threat-led penetration tests, the remediation plans and proof that the tests have been conducted in accordance with the requirements?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "9.1",
+    "question": "Do you provide this information, alongside attestation from the public authority, to the relevant competent authority?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "10.1",
+    "question": "Have you contracted either internal or external testers to carry out threat-led penetration tests?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "10.2",
+    "question": "Have you contracted external testers to carry out threat-led penetration tests?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 26",
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "ref": "11.1",
+    "question": "If you use internal testers, do you also contract external testers every three tests?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 27",
+    "title": "Requirements for testers for the carrying out of TLPT",
+    "ref": "1.1",
+    "question": "Are your penetration testers of the highest suitability and reputability?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 27",
+    "title": "Requirements for testers for the carrying out of TLPT",
+    "ref": "1.2",
+    "question": "Do your penetration testers possess technical and organisational capabilities, and do they demonstrate specific expertise in threat intelligence, penetration testing and red-team testing?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 27",
+    "title": "Requirements for testers for the carrying out of TLPT",
+    "ref": "1.3",
+    "question": "Are your penetration testers either certified by an appropriate accreditation body or compliant with formal codes of conduct or ethical frameworks?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 27",
+    "title": "Requirements for testers for the carrying out of TLPT",
+    "ref": "1.4",
+    "question": "Do your penetration testers provide an independent assurance or audit report covering risks your organisation faces when undergoing testing?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 27",
+    "title": "Requirements for testers for the carrying out of TLPT",
+    "ref": "1.5",
+    "question": "Are your penetration testers fully covered by relevant professional indemnity insurances?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 27",
+    "title": "Requirements for testers for the carrying out of TLPT",
+    "ref": "2.1",
+    "question": "Have you ensured that the use of internal testers is approved by the relevant authority?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 27",
+    "title": "Requirements for testers for the carrying out of TLPT",
+    "ref": "2.2",
+    "question": "When using internal testers, has the competent authority verified that you have sufficient resources and that there are no conflicts of interest in the design and execution phases of these tests?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 27",
+    "title": "Requirements for testers for the carrying out of TLPT",
+    "ref": "2.3",
+    "question": "When using internal testers, have you ensured that the threat intelligence provider is an external party?"
+  },
+  {
+    "chapter": 4,
+    "article": "Article 27",
+    "title": "Requirements for testers for the carrying out of TLPT",
+    "ref": "3.1",
+    "question": "Do your contracts with external testers require them to manage risks associated with the results of threat-led penetration tests? This should include assurance that data processed as part of these tests does not create risks to your organisation."
+  },
+  {
+    "chapter": 5,
+    "article": "",
+    "title": "",
+    "ref": "0.0",
+    "question": "Do you outsource ICT services to third parties?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "1.1",
+    "question": "Do you manage third-party risk as an integral component of ICT risk within the ICT risk management framework? "
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "2.1",
+    "question": "Do you take full responsibility for the compliance with, and the discharge of, all obligations under DORA and other financial regulations?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "3.1",
+    "question": "When managing third-party risk, do you take into account the nature, scale, complexity and importance of ICT-related dependencies?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "4.1",
+    "question": "When managing third-party risk, do you take into account the risks arising from contractual arrangements on the use of third-party ICT service providers? "
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "5.1",
+    "question": "When managing third-party risk, do you take into account the criticality or importance of the respective service, process or function, and the potential impact these risks have on the continuity and availability of financial services and activities?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "6.1",
+    "question": "Do you have, and do you review, an ICT third-party risk strategy, taking into account your multi-vendor strategy?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "6.2",
+    "question": "Does your ICT third-party risk strategy include a policy on the use of ICT services supporting critical or important functions provided by third parties?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "6.3",
+    "question": "Does the policy apply on an individual basis?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "6.4",
+    "question": "Where relevant, does this policy apply on a sub-consolidated and consolidated basis?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "7.1",
+    "question": "Does your management body regularly review the risks in relation to the use of ICT third-party services supporting critical or important functions?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "8.1",
+    "question": "Do you maintain and update at entity level (and, where relevant, at sub-consolidated and consolidated levels) a register of information related to contractual arrangements with third-party ICT services?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "9.1",
+    "question": "Are your third-party contracts appropriately documented, with distinct arrangements for those that cover ICT services supporting critical or important functions and those that do not?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "10.1",
+    "question": "Do you report at least annually to the competent authorities on the number of new ICT service arrangements in place, the categories of ICT third-party service providers, the type of contractual arrangements and the ICT services and functions that are provided?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "11.1",
+    "question": "Are you able to provide the register of information and any other necessary information to the competent authority upon request?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "12.1",
+    "question": "Are you able to promptly inform the competent authority about any planned contractual arrangements on the use of ICT services supporting critical or important functions? This includes operational changes in which existing functions become critical or important."
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "13.1",
+    "question": "When entering into a contract on the use of ICT services, do you assess whether the arrangement covers the use of ICT services supporting a critical or important function?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "14.1",
+    "question": "When entering into a contract on the use of ICT services, do you assess whether supervisory conditions for contracting have been met?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "15.1",
+    "question": "When entering into a contract on the use of ICT services, do you identify and assess all relevant risks related to the arrangement?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "16.1",
+    "question": "When entering into a contract on the use of ICT services, do you perform due diligence checks and ensure that the ICT third-party service provider is suitable?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "17.1",
+    "question": "When entering into a contract on the use of ICT services, do you identify and assess potential conflicts of interest?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "18.1",
+    "question": "Have you ensured that ICT third-party service providers adhere to appropriate information security standards?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "19.1",
+    "question": "When your contracts concern critical or important functions, have you considered whether the service provider uses the highest-quality and most up-to-date information security standards?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "20.1",
+    "question": "Do you take a risk-based approach using commonly accepted standards to determine how often you audit and inspect ICT third-party service providers and the areas that are to be audited?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "21.1",
+    "question": "Where the use of ICT services is technically complex, have you verified that auditors possess appropriate skills and knowledge?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "22.1",
+    "question": "Are you able to terminate ICT service contracts should the service provider commit a significant breach of applicable laws, regulations or contractual terms?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "23.1",
+    "question": "Are you able to terminate ICT service contracts should your monitoring activities reveal third-party risks that could alter the performance of functions provided?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "24.1",
+    "question": "Are you able to terminate ICT service contracts should you find evidence of weaknesses in the service provider’s ICT risk management practices?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "25.1",
+    "question": "Are you able to terminate ICT service contracts should the arrangement mean you can no longer be effectively supervised by the competent authority?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "26.1",
+    "question": "Do you have exit strategies for ICT services supporting critical or important functions? "
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "26.2",
+    "question": "Do these exit strategies take into account risks that might emerge from ICT third-party service providers?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "27.1",
+    "question": "Are you able to end contractual arrangements with third-party ICT providers without disrupting business activities?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "28.1",
+    "question": "Do you have comprehensive and documented plans for ending contractual arrangements with third-party ICT service providers?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "28.2",
+    "question": "Do these plans enable you to end contractual arrangements without affecting your regulatory compliance?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "28.3",
+    "question": "Do these plans enable you to end contractual arrangements without affecting the continuity and quality of the services you provide?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "28.4",
+    "question": "Are these plans sufficiently tested and periodically reviewed?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "29.1",
+    "question": "Have you identified alternative solutions and transition plans when required to end contracts?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 28",
+    "title": "General principles (for sound management of ICT third-party risk)",
+    "ref": "29.2",
+    "question": "Do you have appropriate contingency measures in place to maintain business continuity in the event of disruption?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 29",
+    "title": "Preliminary assessment of ICT concentration risk at entity level",
+    "ref": "1.1",
+    "question": "If third-party ICT services support critical or important business functions, do you consider how easy it would be to find a substitute provider if necessary?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 29",
+    "title": "Preliminary assessment of ICT concentration risk at entity level",
+    "ref": "2.1",
+    "question": "Do you consider whether you have an existing ICT service arrangement with the same provider or one that is closely connected?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 29",
+    "title": "Preliminary assessment of ICT concentration risk at entity level",
+    "ref": "3.1",
+    "question": "Do you weigh the benefits and costs of alternative solutions?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 29",
+    "title": "Preliminary assessment of ICT concentration risk at entity level",
+    "ref": "4.1",
+    "question": "Do you weigh the benefits and risks where these contracts include the possibility of the third-party service provider subcontracting ICT services?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 29",
+    "title": "Preliminary assessment of ICT concentration risk at entity level",
+    "ref": "5.1",
+    "question": "Do you consider insolvency law provisions in the event that the third-party ICT service provider goes bankrupt, and the problems these might cause with recovering your data?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 29",
+    "title": "Preliminary assessment of ICT concentration risk at entity level",
+    "ref": "6.1",
+    "question": "When contracting an ICT service provider based in a third country, do you consider EU data protection compliance requirements and the enforcement of those laws in that third country?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 29",
+    "title": "Preliminary assessment of ICT concentration risk at entity level",
+    "ref": "7.1",
+    "question": "Where ICT services supporting critical or important functions are subcontracted, do you consider how the length and complexity of these arrangements might affect your ability to monitor the contracted functions?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 29",
+    "title": "Preliminary assessment of ICT concentration risk at entity level",
+    "ref": "8.1",
+    "question": "Where ICT services supporting critical or important functions are subcontracted, do you consider whether the competent authority can effectively supervise your arrangements?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "1.1",
+    "question": "Do your contracts set out your rights and obligations and those of the ICT third-party service provider? "
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "2.1",
+    "question": "Do your contracts with third-party ICT service providers contain the service level agreements in a single document?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "2.2",
+    "question": "Is this document available to the relevant parties in either hard copy or a downloadable, durable and accessible format?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "3.1",
+    "question": "Do your contracts include a clear and complete description of all functions and services to be provided by the third-party ICT service provider?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "4.1",
+    "question": "Do your contracts indicate whether third-party ICT service providers are permitted to subcontract support for critical or important functions and the conditions for doing so?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "5.1",
+    "question": "Do your contracts include the regions and countries where third-party ICT services are provided and where data is processed?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "6.1",
+    "question": "Do your contracts require third-party ICT service providers to notify you if there are changes to the locations where these services are provided?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "7.1",
+    "question": "Do your contracts with ICT third-party service providers contain provisions on the availability, authenticity, integrity and confidentiality of data?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "8.1",
+    "question": "Do your contracts with ICT third-party service providers contain provisions for accessing, recovering and returning data in the event of insolvency, the resolution or discontinuation of the service provider's business operations or the termination of the contract?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "9.1",
+    "question": "Do your contracts with third-party ICT service providers include service level descriptions and any updates or revisions to them?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "10.1",
+    "question": "Do your contracts with third-party ICT service providers require them to assist you when they suffer an ICT incident that affects your operations? This should be provided at either no additional cost or a figure based on estimates."
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "11.1",
+    "question": "Do your contracts with third-party ICT service providers require them to cooperate with competent authorities and resolution authorities?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "12.1",
+    "question": "Do your contracts with third-party ICT service providers contain termination rights and related minimum notice periods for the termination of contracts, in accordance with the expectations of competent authorities and resolution authorities?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "13.1",
+    "question": "Do your contracts with third-party ICT service providers contain conditions for when ICT third-party service providers must enrol in your security awareness programmes and digital operational resilience training?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "14.1",
+    "question": "Do your contracts for ICT services supporting critical or important functions contain service level descriptions, including updates and revisions to them?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "14.2",
+    "question": "Do these service level descriptions contain quantitative and qualitative performance targets that can be monitored?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "15.1",
+    "question": "Do your contracts for ICT services supporting critical or important functions include notice periods and the service provider’s reporting obligations?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "16.1",
+    "question": "Do your contracts for ICT services supporting critical or important functions include requirements for the service provider to implement and test business contingency plans?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "16.2",
+    "question": "Do these plans include security measures, tools and policies that enable the service provider to maintain an appropriate level of security for the provision of services?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "17.1",
+    "question": "Do your contracts for ICT services supporting critical or important functions include requirements for the service provider to participate in, and cooperate with, threat-led penetration tests?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "18.1",
+    "question": "Do your contracts for ICT services supporting critical or important functions include the right for you to monitor the service provider’s performance?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "18.2",
+    "question": "Does this monitoring allow you, a third party or the competent authority to access, inspect and audit the service provider?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "18.3",
+    "question": "Does this monitoring permit you, a third party or the competent authority to take copies of relevant documentation on-site if they are critical to the ICT third-party service provider's operations?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "19.1",
+    "question": "Have you explained your right to agree on alternative assurance levels if other clients’ rights are affected?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "20.1",
+    "question": "Have you explained that service providers must cooperate during the on-site inspections and audits performed by competent authorities, the lead overseer, your organisation or an appointed third party?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "21.1",
+    "question": "Have you provided details on the scope of inspections and audits, their frequency and the procedures that will be followed?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "22.1",
+    "question": "Do your contracts for ICT services supporting critical or important functions contain exit strategies?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "22.2",
+    "question": "Do these exit strategies contain a mandatory transition period during which the ICT third-party service provider will continue providing the respective functions or ICT services?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "22.3",
+    "question": "Does this transition period give you enough time to find an alternative service provider or to adopt an in-house solution?"
+  },
+  {
+    "chapter": 5,
+    "article": "Article 30",
+    "title": "Key contractual provisions",
+    "ref": "23.1",
+    "question": "When negotiating contractual arrangements, do you consider the use of standard contractual clauses developed by public authorities for specific services?"
+  },
+  {
+    "chapter": 6,
+    "article": "",
+    "title": "",
+    "ref": "0.0",
+    "question": "Do you exchange cyber threat information and intelligence with other financial entities? This may include indicators of compromise, tactics, techniques and procedures, cyber security alerts and configuration tools."
+  },
+  {
+    "chapter": 6,
+    "article": "Article 45",
+    "title": "Information-sharing arrangements on cyber threat information and intelligence",
+    "ref": "1.1",
+    "question": "Does this information and intelligence sharing enhance the digital operational resilience of your organisation and of counterparts?"
+  },
+  {
+    "chapter": 6,
+    "article": "Article 45",
+    "title": "Information-sharing arrangements on cyber threat information and intelligence",
+    "ref": "2.1",
+    "question": "Does this information and intelligence sharing take place within trusted communities of financial entities?"
+  },
+  {
+    "chapter": 6,
+    "article": "Article 45",
+    "title": "Information-sharing arrangements on cyber threat information and intelligence",
+    "ref": "3.1",
+    "question": "Is this information and intelligence implemented through arrangements that protect the potentially sensitive nature of the information shared?"
+  },
+  {
+    "chapter": 6,
+    "article": "Article 45",
+    "title": "Information-sharing arrangements on cyber threat information and intelligence",
+    "ref": "4.1",
+    "question": "Is this information and intelligence sharing governed by rules of conduct in full respect of business confidentiality, the protection of personal data and guidelines on competition policy?"
+  },
+  {
+    "chapter": 6,
+    "article": "Article 45",
+    "title": "Information-sharing arrangements on cyber threat information and intelligence",
+    "ref": "5.1",
+    "question": "Do your information-sharing arrangements define the conditions for participation?"
+  },
+  {
+    "chapter": 6,
+    "article": "Article 45",
+    "title": "Information-sharing arrangements on cyber threat information and intelligence",
+    "ref": "6.1",
+    "question": "Do the information-sharing arrangements that refer to business confidentiality and data protection explain when public authorities might be involved and in what capacity?"
+  },
+  {
+    "chapter": 6,
+    "article": "Article 45",
+    "title": "Information-sharing arrangements on cyber threat information and intelligence",
+    "ref": "7.1",
+    "question": "Do you notify competent authorities of your participation in information-sharing arrangements at the start and, where applicable, the end of your membership?"
+  }
+]
