@@ -51,17 +51,6 @@ jobs:
           mkdir -p .next/standalone/prisma
           cp prisma/schema.prisma .next/standalone/prisma/
 
-          # Create package.json for the standalone app
-          cat > .next/standalone/package.json << 'EOF'
-          {
-            "name": "dora-maturity-audit",
-            "version": "1.0.0",
-            "scripts": {
-              "start": "node server.js"
-            }
-          }
-          EOF
-
       - name: Create deployment package
         run: |
           cd .next/standalone
@@ -94,69 +83,24 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Configure Azure Web App
-        run: |
-          az webapp config appsettings set \
-            --name ${{ env.AZURE_WEBAPP_NAME }} \
-            --resource-group rg-dora-audit-prod \
-            --settings \
-            SCM_DO_BUILD_DURING_DEPLOYMENT=false \
-            WEBSITE_RUN_FROM_PACKAGE=0
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           package: ./deploy
 
+      - name: Wait for deployment to stabilize
+        run: sleep 30
+
+      - name: Configure startup command
+        run: |
+          az webapp config set \
+            --name ${{ env.AZURE_WEBAPP_NAME }} \
+            --resource-group rg-dora-audit-prod \
+            --startup-file "node server.js"
+
       - name: Restart Web App
         run: |
           az webapp restart \
             --name ${{ env.AZURE_WEBAPP_NAME }} \
             --resource-group rg-dora-audit-prod
-
-  terraform:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    defaults:
-      run:
-        working-directory: ./infra
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.6.0
-
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Terraform Init
-        run: terraform init
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-
-      - name: Terraform Plan
-        run: terraform plan -out=tfplan
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve tfplan
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
