@@ -17,25 +17,56 @@ export async function POST(
   try {
     const { auditId } = await params;
     const formData = await request.formData();
-    const file = formData.get('file') as File;
-    const responseId = formData.get('responseId') as string;
 
-    if (!file || !responseId) {
+    // Support both 'file' (single) and 'files' (multiple)
+    const files: File[] = [];
+    const singleFile = formData.get('file') as File | null;
+    const multipleFiles = formData.getAll('files') as File[];
+
+    if (singleFile) {
+      files.push(singleFile);
+    }
+    if (multipleFiles.length > 0) {
+      files.push(...multipleFiles);
+    }
+
+    // Support both responseId and questionId
+    let responseId = formData.get('responseId') as string | null;
+    const questionId = formData.get('questionId') as string | null;
+
+    if (files.length === 0) {
       return NextResponse.json(
-        { error: 'File and responseId are required' },
+        { error: 'At least one file is required' },
         { status: 400 }
       );
     }
 
-    // Validate file size (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
+    if (!responseId && !questionId) {
       return NextResponse.json(
-        { error: 'File size exceeds 10MB limit' },
+        { error: 'Either responseId or questionId is required' },
         { status: 400 }
       );
     }
 
-    // Validate file type
+    // If questionId provided, find or create response
+    if (!responseId && questionId) {
+      let existingResponse = await prisma.response.findFirst({
+        where: { auditId, questionId },
+      });
+
+      if (!existingResponse) {
+        existingResponse = await prisma.response.create({
+          data: {
+            auditId,
+            questionId,
+            answer: 'NO_ANSWER',
+          },
+        });
+      }
+      responseId = existingResponse.id;
+    }
+
+    // Validate file types
     const allowedTypes = [
       'application/pdf',
       'image/png',
@@ -49,16 +80,26 @@ export async function POST(
       'application/zip',
     ];
 
-    if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json(
-        { error: 'File type not allowed' },
-        { status: 400 }
-      );
+    // Validate all files
+    for (const file of files) {
+      if (file.size > 10 * 1024 * 1024) {
+        return NextResponse.json(
+          { error: `File ${file.name} exceeds 10MB limit` },
+          { status: 400 }
+        );
+      }
+
+      if (!allowedTypes.includes(file.type)) {
+        return NextResponse.json(
+          { error: `File type ${file.type} not allowed for ${file.name}` },
+          { status: 400 }
+        );
+      }
     }
 
     // Verify response belongs to audit
     const response = await prisma.response.findFirst({
-      where: { id: responseId, auditId },
+      where: { id: responseId!, auditId },
     });
 
     if (!response) {
@@ -72,42 +113,54 @@ export async function POST(
     const blobServiceClient = getBlobServiceClient();
     const containerClient = blobServiceClient.getContainerClient('evidence');
 
-    const timestamp = Date.now();
-    const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const blobName = `${auditId}/${responseId}/${timestamp}_${sanitizedFileName}`;
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+    // Ensure container exists
+    await containerClient.createIfNotExists();
 
-    const arrayBuffer = await file.arrayBuffer();
-    await blockBlobClient.uploadData(Buffer.from(arrayBuffer), {
-      blobHTTPHeaders: { blobContentType: file.type },
-    });
+    const uploadedEvidences = [];
 
-    // Create evidence record
-    const evidence = await prisma.evidence.create({
-      data: {
-        responseId,
-        fileName: file.name,
-        fileUrl: blockBlobClient.url,
-        fileType: file.type,
-        fileSize: file.size,
-      },
-    });
+    for (const file of files) {
+      const timestamp = Date.now();
+      const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+      const blobName = `${auditId}/${responseId}/${timestamp}_${sanitizedFileName}`;
+      const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-    await prisma.auditLog.create({
-      data: {
-        action: 'UPLOAD_EVIDENCE',
-        resource: 'Evidence',
-        resourceId: evidence.id,
-        details: {
-          auditId,
-          responseId,
+      const arrayBuffer = await file.arrayBuffer();
+      await blockBlobClient.uploadData(Buffer.from(arrayBuffer), {
+        blobHTTPHeaders: { blobContentType: file.type },
+      });
+
+      // Create evidence record
+      const evidence = await prisma.evidence.create({
+        data: {
+          responseId: responseId!,
           fileName: file.name,
+          fileUrl: blockBlobClient.url,
+          fileType: file.type,
           fileSize: file.size,
         },
-      },
-    });
+      });
 
-    return NextResponse.json(evidence, { status: 201 });
+      await prisma.auditLog.create({
+        data: {
+          action: 'UPLOAD_EVIDENCE',
+          resource: 'Evidence',
+          resourceId: evidence.id,
+          details: {
+            auditId,
+            responseId,
+            fileName: file.name,
+            fileSize: file.size,
+          },
+        },
+      });
+
+      uploadedEvidences.push(evidence);
+    }
+
+    return NextResponse.json(
+      uploadedEvidences.length === 1 ? uploadedEvidences[0] : uploadedEvidences,
+      { status: 201 }
+    );
   } catch (error) {
     console.error('Error uploading evidence:', error);
     return NextResponse.json(

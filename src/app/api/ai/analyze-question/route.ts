@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { DocumentStatus } from '@prisma/client';
 import Anthropic from '@anthropic-ai/sdk';
 
 export async function POST(request: NextRequest) {
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest) {
     const documents = await prisma.document.findMany({
       where: {
         organizationId,
-        status: 'PROCESSED',
+        status: DocumentStatus.PROCESSED,
       },
       include: {
         chunks: {
