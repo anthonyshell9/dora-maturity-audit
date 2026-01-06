@@ -29,20 +29,43 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
+      - name: Generate Prisma client
+        run: npx prisma generate
+
       - name: Build application
         run: npm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
+      - name: Prepare standalone deployment
+        run: |
+          # Copy static files to standalone directory
+          cp -r .next/static .next/standalone/.next/static
+
+          # Copy public folder if it exists
+          if [ -d "public" ]; then
+            cp -r public .next/standalone/public
+          fi
+
+          # Copy prisma schema for migrations
+          mkdir -p .next/standalone/prisma
+          cp prisma/schema.prisma .next/standalone/prisma/
+
+          # Create package.json for the standalone app
+          cat > .next/standalone/package.json << 'EOF'
+          {
+            "name": "dora-maturity-audit",
+            "version": "1.0.0",
+            "scripts": {
+              "start": "node server.js"
+            }
+          }
+          EOF
+
       - name: Create deployment package
         run: |
-          zip -r deploy.zip . \
-            -x "node_modules/*" \
-            -x ".git/*" \
-            -x ".github/*" \
-            -x "infra/*" \
-            -x "*.md" \
-            -x ".env*"
+          cd .next/standalone
+          zip -r ../../deploy.zip .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -71,18 +94,26 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Configure Azure Web App
+        run: |
+          az webapp config appsettings set \
+            --name ${{ env.AZURE_WEBAPP_NAME }} \
+            --resource-group rg-dora-audit-prod \
+            --settings \
+            SCM_DO_BUILD_DURING_DEPLOYMENT=false \
+            WEBSITE_RUN_FROM_PACKAGE=0
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           package: ./deploy
 
-      - name: Run database migrations
+      - name: Restart Web App
         run: |
-          az webapp config appsettings set \
+          az webapp restart \
             --name ${{ env.AZURE_WEBAPP_NAME }} \
-            --resource-group rg-dora-audit-prod \
-            --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
+            --resource-group rg-dora-audit-prod
 
   terraform:
     runs-on: ubuntu-latest
