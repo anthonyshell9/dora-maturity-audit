@@ -18,17 +18,25 @@ import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 const ORGANIZATION_TYPES = [
-  { value: "MICROENTERPRISE", label: "Microenterprise" },
+  { value: "CREDIT_INSTITUTION", label: "Credit Institution (Bank)" },
+  { value: "PAYMENT_INSTITUTION", label: "Payment Institution" },
+  { value: "ELECTRONIC_MONEY_INSTITUTION", label: "Electronic Money Institution" },
+  { value: "INVESTMENT_FIRM", label: "Investment Firm" },
+  { value: "CRYPTO_ASSET_SERVICE_PROVIDER", label: "Crypto-Asset Service Provider" },
+  { value: "INSURANCE_UNDERTAKING", label: "Insurance Undertaking" },
+  { value: "REINSURANCE_UNDERTAKING", label: "Reinsurance Undertaking" },
+  { value: "PENSION_FUND", label: "Pension Fund (IORP)" },
+  { value: "UCITS_MANAGEMENT_COMPANY", label: "UCITS Management Company" },
+  { value: "AIFM", label: "Alternative Investment Fund Manager (AIFM)" },
   { value: "DATA_REPORTING_SERVICE_PROVIDER", label: "Data Reporting Service Provider" },
   { value: "CENTRAL_SECURITIES_DEPOSITORY", label: "Central Securities Depository" },
   { value: "CENTRAL_COUNTERPARTY", label: "Central Counterparty" },
-  { value: "PAYMENT_INSTITUTION_EXEMPTED", label: "Payment Institution (Exempted - Directive 2015/2366)" },
-  { value: "INSTITUTION_EXEMPTED_2013_36", label: "Institution (Exempted - Directive 2013/36/EU)" },
-  { value: "ELECTRONIC_MONEY_INSTITUTION_EXEMPTED", label: "Electronic Money Institution (Exempted)" },
-  { value: "SMALL_OCCUPATIONAL_RETIREMENT", label: "Small Occupational Retirement Institution" },
-  { value: "SMALL_INTERCONNECTED_INVESTMENT", label: "Small Interconnected Investment Firm" },
-  { value: "SIGNIFICANT_CREDIT_INSTITUTION", label: "Significant Credit Institution" },
-  { value: "STANDARD", label: "Standard Financial Entity" },
+  { value: "TRADING_VENUE", label: "Trading Venue" },
+  { value: "CREDIT_RATING_AGENCY", label: "Credit Rating Agency" },
+  { value: "CROWDFUNDING_SERVICE_PROVIDER", label: "Crowdfunding Service Provider" },
+  { value: "SECURITISATION_REPOSITORY", label: "Securitisation Repository" },
+  { value: "ICT_THIRD_PARTY_SERVICE_PROVIDER", label: "ICT Third-Party Service Provider" },
+  { value: "OTHER", label: "Other Financial Entity" },
 ];
 
 const APPLICABILITY_CRITERIA = [
@@ -92,7 +100,7 @@ export default function NewAuditPage() {
     name: "",
     organizationId: "",
     newOrganizationName: "",
-    organizationType: "STANDARD",
+    organizationType: "CREDIT_INSTITUTION",
     applicability: {
       microenterprise: false,
       dataReportingServiceProvider: false,

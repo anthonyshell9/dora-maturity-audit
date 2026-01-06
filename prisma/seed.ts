@@ -110,14 +110,27 @@ async function main() {
     }
   }
 
-  // Create a demo user
-  console.log('Creating demo user...');
+  // Create a default auditor (required for audit creation)
+  console.log('Creating default auditor...');
   await prisma.user.upsert({
-    where: { email: 'demo@example.com' },
+    where: { id: 'default-auditor' },
     update: {},
     create: {
-      email: 'demo@example.com',
-      name: 'Demo User',
+      id: 'default-auditor',
+      email: 'auditor@dora-audit.local',
+      name: 'Default Auditor',
+      role: 'AUDITOR',
+    },
+  });
+
+  // Create a demo admin user
+  console.log('Creating demo admin...');
+  await prisma.user.upsert({
+    where: { email: 'admin@example.com' },
+    update: {},
+    create: {
+      email: 'admin@example.com',
+      name: 'Admin User',
       role: 'ADMIN',
     },
   });
@@ -130,7 +143,7 @@ async function main() {
     create: {
       id: 'demo-org',
       name: 'Demo Financial Services',
-      type: 'STANDARD',
+      type: 'CREDIT_INSTITUTION',
       description: 'A demo organization for testing DORA compliance',
     },
   });

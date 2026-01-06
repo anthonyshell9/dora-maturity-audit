@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,14 +22,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, FileText, Download } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Plus, Search, FileText, Download, Trash2, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface Audit {
   id: string;
   name: string;
-  organization: { name: string };
+  organization: { id: string; name: string };
   status: "IN_PROGRESS" | "COMPLETED" | "ARCHIVED";
-  progress: number;
+  _count: { responses: number };
   startedAt: string;
   completedAt?: string;
 }
@@ -37,35 +48,74 @@ interface Audit {
 export default function AuditsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [audits, setAudits] = useState<Audit[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedAudit, setSelectedAudit] = useState<Audit | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [totalQuestions, setTotalQuestions] = useState(336);
 
-  // Mock data - will be replaced with API calls
-  const audits: Audit[] = [
-    {
-      id: "1",
-      name: "Q4 2024 DORA Assessment",
-      organization: { name: "Acme Financial Services" },
-      status: "IN_PROGRESS",
-      progress: 65,
-      startedAt: "2024-01-01",
-    },
-    {
-      id: "2",
-      name: "Initial Gap Analysis",
-      organization: { name: "Beta Bank" },
-      status: "IN_PROGRESS",
-      progress: 32,
-      startedAt: "2024-01-04",
-    },
-    {
-      id: "3",
-      name: "Annual Compliance Review",
-      organization: { name: "Acme Financial Services" },
-      status: "COMPLETED",
-      progress: 100,
-      startedAt: "2023-11-01",
-      completedAt: "2024-01-01",
-    },
-  ];
+  const fetchAudits = useCallback(async () => {
+    try {
+      const res = await fetch("/api/audits");
+      if (!res.ok) throw new Error("Failed to fetch audits");
+      const data = await res.json();
+      setAudits(data);
+    } catch (error) {
+      console.error("Error fetching audits:", error);
+      toast.error("Failed to load audits");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchQuestionCount = useCallback(async () => {
+    try {
+      const res = await fetch("/api/questions/chapters");
+      if (!res.ok) return;
+      const chapters = await res.json();
+      const total = chapters.reduce((sum: number, ch: { _count: { questions: number } }) => sum + ch._count.questions, 0);
+      if (total > 0) setTotalQuestions(total);
+    } catch (error) {
+      console.error("Error fetching question count:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAudits();
+    fetchQuestionCount();
+  }, [fetchAudits, fetchQuestionCount]);
+
+  const handleDelete = async () => {
+    if (!selectedAudit) return;
+
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/audits/${selectedAudit.id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Failed to delete audit");
+      }
+
+      toast.success("Audit deleted successfully");
+      setDeleteDialogOpen(false);
+      setSelectedAudit(null);
+      fetchAudits();
+    } catch (error) {
+      console.error("Error deleting audit:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to delete audit");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const openDeleteDialog = (audit: Audit) => {
+    setSelectedAudit(audit);
+    setDeleteDialogOpen(true);
+  };
 
   const filteredAudits = audits.filter((audit) => {
     const matchesSearch =
@@ -89,6 +139,10 @@ export default function AuditsPage() {
     }
   };
 
+  const getProgress = (responsesCount: number) => {
+    return Math.round((responsesCount / totalQuestions) * 100);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -105,6 +159,30 @@ export default function AuditsPage() {
           </Button>
         </Link>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Audit</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete &quot;{selectedAudit?.name}&quot;? This action cannot be undone
+              and will also delete all responses and reports associated with this audit.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleting}
+              className="bg-red-500 hover:bg-red-600"
+            >
+              {deleting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <Card>
         <CardHeader>
@@ -140,61 +218,83 @@ export default function AuditsPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Organization</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Progress</TableHead>
-                <TableHead>Started</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredAudits.map((audit) => (
-                <TableRow key={audit.id}>
-                  <TableCell>
-                    <Link
-                      href={`/audits/${audit.id}`}
-                      className="font-medium hover:underline"
-                    >
-                      {audit.name}
-                    </Link>
-                  </TableCell>
-                  <TableCell>{audit.organization.name}</TableCell>
-                  <TableCell>{getStatusBadge(audit.status)}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Progress value={audit.progress} className="w-20 h-2" />
-                      <span className="text-sm text-muted-foreground">
-                        {audit.progress}%
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {new Date(audit.startedAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Link href={`/audits/${audit.id}`}>
-                        <Button variant="outline" size="sm">
-                          <FileText className="h-4 w-4 mr-1" />
-                          View
-                        </Button>
-                      </Link>
-                      {audit.status === "COMPLETED" && (
-                        <Button variant="outline" size="sm">
-                          <Download className="h-4 w-4 mr-1" />
-                          Report
-                        </Button>
-                      )}
-                    </div>
-                  </TableCell>
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : filteredAudits.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              {searchQuery || statusFilter !== "all"
+                ? "No audits match your filters"
+                : "No audits yet. Create one to get started."}
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Organization</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Progress</TableHead>
+                  <TableHead>Started</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredAudits.map((audit) => {
+                  const progress = getProgress(audit._count.responses);
+                  return (
+                    <TableRow key={audit.id}>
+                      <TableCell>
+                        <Link
+                          href={`/audits/${audit.id}`}
+                          className="font-medium hover:underline"
+                        >
+                          {audit.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{audit.organization.name}</TableCell>
+                      <TableCell>{getStatusBadge(audit.status)}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Progress value={progress} className="w-20 h-2" />
+                          <span className="text-sm text-muted-foreground">
+                            {progress}%
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        {new Date(audit.startedAt).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Link href={`/audits/${audit.id}`}>
+                            <Button variant="outline" size="sm">
+                              <FileText className="h-4 w-4 mr-1" />
+                              View
+                            </Button>
+                          </Link>
+                          {audit.status === "COMPLETED" && (
+                            <Button variant="outline" size="sm">
+                              <Download className="h-4 w-4 mr-1" />
+                              Report
+                            </Button>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => openDeleteDialog(audit)}
+                          >
+                            <Trash2 className="h-4 w-4 text-red-500" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>
