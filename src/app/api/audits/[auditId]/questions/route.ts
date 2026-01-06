@@ -8,7 +8,7 @@ export async function GET(
   try {
     const { auditId } = await params;
     const { searchParams } = new URL(request.url);
-    const chapter = searchParams.get('chapter');
+    const chapter = searchParams.get('chapterId') || searchParams.get('chapter');
 
     // Get audit with applicability settings
     const audit = await prisma.audit.findUnique({
@@ -58,16 +58,19 @@ export async function GET(
       ],
     });
 
-    // Transform to include response data directly
+    // Transform to match frontend interface
     const transformedQuestions = questions.map((q) => ({
       id: q.id,
       ref: q.ref,
       text: q.text,
-      chapter: q.article.chapterId,
-      chapterTitle: q.article.chapter.title,
-      articleNumber: q.article.number,
-      articleTitle: q.article.title,
-      applicabilityRules: q.applicabilityRules,
+      article: {
+        number: q.article.number,
+        title: q.article.title,
+        chapter: {
+          id: q.article.chapterId,
+          title: q.article.chapter.title,
+        },
+      },
       response: q.responses[0] || null,
     }));
 
