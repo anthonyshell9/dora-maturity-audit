@@ -14,8 +14,8 @@ terraform {
 
   backend "azurerm" {
     resource_group_name  = "rg-terraform-state"
-    storage_account_name = "stterraformstatedora"
-    container_name       = "tfstate"
+    storage_account_name = "tfstateformation"
+    container_name       = "dora-tfstate"
     key                  = "dora-audit.tfstate"
   }
 }
@@ -31,7 +31,7 @@ provider "azurerm" {
 # Variables
 variable "location" {
   type        = string
-  default     = "westeurope"
+  default     = "francecentral"
   description = "Azure region for resources"
 }
 
@@ -179,14 +179,14 @@ resource "azurerm_storage_account" "main" {
 # Storage Container for Evidence
 resource "azurerm_storage_container" "evidence" {
   name                  = "evidence"
-  storage_account_id    = azurerm_storage_account.main.id
+  storage_account_name  = azurerm_storage_account.main.name
   container_access_type = "private"
 }
 
 # Storage Container for Reports
 resource "azurerm_storage_container" "reports" {
   name                  = "reports"
-  storage_account_id    = azurerm_storage_account.main.id
+  storage_account_name  = azurerm_storage_account.main.name
   container_access_type = "private"
 }
 
