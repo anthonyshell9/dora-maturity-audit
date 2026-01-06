@@ -372,14 +372,14 @@ export default function AuditDetailPage({
     return chapters.map((chapter) => {
       const answeredCount = audit?.responses?.filter((r) => {
         const q = questions.find((q) => q.id === r.questionId);
-        return q?.article.chapter.id === chapter.id;
+        return q?.article?.chapter?.id === chapter.id;
       }).length || 0;
 
       // Use local responses for current session
       const localAnsweredCount = Object.entries(localResponses).filter(
         ([qId, r]) => {
           const q = questions.find((q) => q.id === qId);
-          return q?.article.chapter.id === chapter.id && r.answer;
+          return q?.article?.chapter?.id === chapter.id && r.answer;
         }
       ).length;
 
@@ -508,7 +508,7 @@ export default function AuditDetailPage({
                           {currentQuestionIndex !== idx && getAnswerIcon(response?.answer)}
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium">
-                              {q.ref}. {q.text.substring(0, 50)}...
+                              {q.ref}. {q.text?.substring(0, 50) || "Question"}...
                             </p>
                             <p
                               className={`text-xs ${
@@ -517,7 +517,7 @@ export default function AuditDetailPage({
                                   : "text-muted-foreground"
                               }`}
                             >
-                              Article {q.article.number}
+                              Article {q.article?.number || "N/A"}
                             </p>
                           </div>
                         </div>
@@ -538,7 +538,7 @@ export default function AuditDetailPage({
                 <div className="flex items-center justify-between">
                   <div>
                     <Badge variant="outline" className="mb-2">
-                      Article {currentQuestion.article.number}: {currentQuestion.article.title}
+                      Article {currentQuestion.article?.number || "N/A"}: {currentQuestion.article?.title || ""}
                     </Badge>
                     <CardTitle className="text-lg">
                       {currentQuestion.ref}. {currentQuestion.text}
