@@ -11,6 +11,8 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  FileUp,
+  Brain,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -19,6 +21,8 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Audits", href: "/audits", icon: ClipboardList },
   { name: "Organizations", href: "/organizations", icon: Building2 },
+  { name: "Documents", href: "/documents", icon: FileUp },
+  { name: "AI Analysis", href: "/ai-analysis", icon: Brain },
   { name: "Reports", href: "/reports", icon: FileText },
   { name: "Settings", href: "/settings", icon: Settings },
 ];

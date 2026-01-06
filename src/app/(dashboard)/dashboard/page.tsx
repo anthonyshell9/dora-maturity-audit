@@ -199,7 +199,7 @@ export default function DashboardPage() {
                 Start New Audit
               </Button>
             </Link>
-            <Link href="/organizations/new" className="block">
+            <Link href="/organizations" className="block">
               <Button variant="outline" className="w-full justify-start">
                 <Building2 className="h-4 w-4 mr-2" />
                 Add Organization
@@ -217,23 +217,23 @@ export default function DashboardPage() {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span>Chapter 2: ICT Risk Management</span>
-                <span className="text-muted-foreground">163 questions</span>
+                <span className="text-muted-foreground">185 questions</span>
               </div>
               <div className="flex justify-between">
                 <span>Chapter 3: Incident Management</span>
-                <span className="text-muted-foreground">28 questions</span>
+                <span className="text-muted-foreground">29 questions</span>
               </div>
               <div className="flex justify-between">
                 <span>Chapter 4: Resilience Testing</span>
-                <span className="text-muted-foreground">33 questions</span>
+                <span className="text-muted-foreground">38 questions</span>
               </div>
               <div className="flex justify-between">
                 <span>Chapter 5: Third-Party Risk</span>
-                <span className="text-muted-foreground">75 questions</span>
+                <span className="text-muted-foreground">76 questions</span>
               </div>
               <div className="flex justify-between">
                 <span>Chapter 6: Information Sharing</span>
-                <span className="text-muted-foreground">37 questions</span>
+                <span className="text-muted-foreground">8 questions</span>
               </div>
             </div>
           </CardContent>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 const ORGANIZATION_TYPES = [
@@ -70,10 +70,17 @@ interface ApplicabilityState {
   significantCreditInstitution: boolean;
 }
 
+interface Organization {
+  id: string;
+  name: string;
+}
+
 export default function NewAuditPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [loadingOrgs, setLoadingOrgs] = useState(true);
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
 
   const [formData, setFormData] = useState<{
     name: string;
@@ -100,11 +107,23 @@ export default function NewAuditPage() {
     },
   });
 
-  // Mock organizations - will be replaced with API call
-  const organizations = [
-    { id: "1", name: "Acme Financial Services" },
-    { id: "2", name: "Beta Bank" },
-  ];
+  const fetchOrganizations = useCallback(async () => {
+    try {
+      const res = await fetch("/api/organizations");
+      if (!res.ok) throw new Error("Failed to fetch organizations");
+      const data = await res.json();
+      setOrganizations(data);
+    } catch (error) {
+      console.error("Error fetching organizations:", error);
+      toast.error("Failed to load organizations");
+    } finally {
+      setLoadingOrgs(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchOrganizations();
+  }, [fetchOrganizations]);
 
   const handleApplicabilityChange = (key: ApplicabilityKey, checked: boolean) => {
     setFormData((prev) => ({
@@ -119,12 +138,52 @@ export default function NewAuditPage() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      // API call would go here
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      let organizationId = formData.organizationId;
+
+      // Create new organization if needed
+      if (formData.organizationId === "new") {
+        const orgRes = await fetch("/api/organizations", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: formData.newOrganizationName,
+            type: formData.organizationType,
+          }),
+        });
+
+        if (!orgRes.ok) {
+          const error = await orgRes.json();
+          throw new Error(error.error || "Failed to create organization");
+        }
+
+        const newOrg = await orgRes.json();
+        organizationId = newOrg.id;
+      }
+
+      // Create the audit
+      // Note: We're using a default auditor ID since auth isn't implemented yet
+      const auditRes = await fetch("/api/audits", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          organizationId,
+          auditorId: "default-auditor", // This should come from auth context
+          applicability: formData.applicability,
+        }),
+      });
+
+      if (!auditRes.ok) {
+        const error = await auditRes.json();
+        throw new Error(error.error || "Failed to create audit");
+      }
+
+      const audit = await auditRes.json();
       toast.success("Audit created successfully!");
-      router.push("/audits/1"); // Would use actual audit ID
-    } catch {
-      toast.error("Failed to create audit");
+      router.push(`/audits/${audit.id}`);
+    } catch (error) {
+      console.error("Error creating audit:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to create audit");
     } finally {
       setLoading(false);
     }
@@ -201,28 +260,35 @@ export default function NewAuditPage() {
 
             <div className="space-y-2">
               <Label>Organization</Label>
-              <Select
-                value={formData.organizationId}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    organizationId: value,
-                    newOrganizationName: value === "new" ? prev.newOrganizationName : "",
-                  }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select an organization" />
-                </SelectTrigger>
-                <SelectContent>
-                  {organizations.map((org) => (
-                    <SelectItem key={org.id} value={org.id}>
-                      {org.name}
-                    </SelectItem>
-                  ))}
-                  <SelectItem value="new">+ Create new organization</SelectItem>
-                </SelectContent>
-              </Select>
+              {loadingOrgs ? (
+                <div className="flex items-center gap-2 py-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span className="text-sm text-muted-foreground">Loading organizations...</span>
+                </div>
+              ) : (
+                <Select
+                  value={formData.organizationId}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      organizationId: value,
+                      newOrganizationName: value === "new" ? prev.newOrganizationName : "",
+                    }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select an organization" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {organizations.map((org) => (
+                      <SelectItem key={org.id} value={org.id}>
+                        {org.name}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value="new">+ Create new organization</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
             </div>
 
             {formData.organizationId === "new" && (
@@ -380,7 +446,7 @@ export default function NewAuditPage() {
         <Button
           variant="outline"
           onClick={() => setStep((s) => Math.max(1, s - 1))}
-          disabled={step === 1}
+          disabled={step === 1 || loading}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Previous
@@ -393,8 +459,9 @@ export default function NewAuditPage() {
           </Button>
         ) : (
           <Button onClick={handleSubmit} disabled={loading}>
+            {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
             {loading ? "Creating..." : "Create Audit"}
-            <Check className="h-4 w-4 ml-2" />
+            {!loading && <Check className="h-4 w-4 ml-2" />}
           </Button>
         )}
       </div>

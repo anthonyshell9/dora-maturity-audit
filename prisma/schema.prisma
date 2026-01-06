@@ -19,6 +19,7 @@ model Organization {
 
   audits      Audit[]
   users       User[]
+  documents   Document[]
 
   @@map("organizations")
 }
@@ -203,4 +204,85 @@ model AuditLog {
   @@index([resource, resourceId])
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+// Documents uploaded for AI analysis
+model Document {
+  id             String         @id @default(cuid())
+  organizationId String
+  name           String
+  originalName   String
+  fileUrl        String
+  fileType       String         // pdf, docx, xlsx, txt, etc.
+  fileSize       BigInt         // Size in bytes (supports up to 5GB)
+  status         DocumentStatus @default(PENDING)
+  errorMessage   String?
+  uploadedAt     DateTime       @default(now())
+  processedAt    DateTime?
+
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  chunks         DocumentChunk[]
+
+  @@index([organizationId])
+  @@index([status])
+  @@map("documents")
+}
+
+enum DocumentStatus {
+  PENDING      // Uploaded, waiting to be processed
+  PROCESSING   // Being processed by AI
+  COMPLETED    // Successfully processed
+  ERROR        // Processing failed
+}
+
+// Document chunks for RAG (vector search)
+model DocumentChunk {
+  id         String   @id @default(cuid())
+  documentId String
+  content    String   // The text content of this chunk
+  metadata   Json?    // Page number, section, etc.
+  embedding  Float[]  // Vector embedding for similarity search
+  chunkIndex Int      // Order of this chunk in the document
+  createdAt  DateTime @default(now())
+
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@map("document_chunks")
+}
+
+// AI-generated suggestions for audit answers
+model AISuggestion {
+  id          String   @id @default(cuid())
+  auditId     String
+  questionId  String
+  suggestion  String   // The suggested answer/assessment
+  confidence  Float    // 0-1 confidence score
+  reasoning   String?  // Why the AI thinks this
+  sources     Json?    // References to document chunks
+  status      SuggestionStatus @default(PENDING)
+  createdAt   DateTime @default(now())
+  reviewedAt  DateTime?
+
+  @@unique([auditId, questionId])
+  @@index([auditId])
+  @@index([confidence])
+  @@map("ai_suggestions")
+}
+
+enum SuggestionStatus {
+  PENDING   // Not yet reviewed
+  ACCEPTED  // User accepted the suggestion
+  REJECTED  // User rejected the suggestion
+  MODIFIED  // User modified the suggestion
+}
+
+// Settings (including API keys - encrypted)
+model Settings {
+  id        String   @id @default("default")
+  key       String   @unique
+  value     String   // Encrypted value for sensitive data
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
 }

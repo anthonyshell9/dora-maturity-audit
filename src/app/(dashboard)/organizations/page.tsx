@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -32,7 +42,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Search, Building2, Edit, Trash2 } from "lucide-react";
+import { Plus, Search, Building2, Edit, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 const ORGANIZATION_TYPES = [
@@ -54,48 +64,157 @@ interface Organization {
   name: string;
   type: string;
   description?: string;
-  _count: { audits: number };
+  _count: { audits: number; users: number };
   createdAt: string;
 }
 
 export default function OrganizationsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     type: "STANDARD",
     description: "",
   });
 
-  // Mock data
-  const organizations: Organization[] = [
-    {
-      id: "1",
-      name: "Acme Financial Services",
-      type: "STANDARD",
-      description: "Leading financial services provider",
-      _count: { audits: 2 },
-      createdAt: "2024-01-01",
-    },
-    {
-      id: "2",
-      name: "Beta Bank",
-      type: "SIGNIFICANT_CREDIT_INSTITUTION",
-      description: "Major European bank",
-      _count: { audits: 1 },
-      createdAt: "2024-01-04",
-    },
-  ];
+  const fetchOrganizations = useCallback(async () => {
+    try {
+      const res = await fetch("/api/organizations");
+      if (!res.ok) throw new Error("Failed to fetch organizations");
+      const data = await res.json();
+      setOrganizations(data);
+    } catch (error) {
+      console.error("Error fetching organizations:", error);
+      toast.error("Failed to load organizations");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchOrganizations();
+  }, [fetchOrganizations]);
 
   const filteredOrganizations = organizations.filter((org) =>
     org.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleSubmit = async () => {
-    // API call would go here
-    toast.success("Organization created successfully");
-    setDialogOpen(false);
-    setFormData({ name: "", type: "STANDARD", description: "" });
+  const handleCreate = async () => {
+    if (!formData.name.trim()) {
+      toast.error("Organization name is required");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/organizations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          type: formData.type,
+          description: formData.description.trim() || undefined,
+        }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Failed to create organization");
+      }
+
+      toast.success("Organization created successfully");
+      setDialogOpen(false);
+      setFormData({ name: "", type: "STANDARD", description: "" });
+      fetchOrganizations();
+    } catch (error) {
+      console.error("Error creating organization:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to create organization");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (!selectedOrg || !formData.name.trim()) {
+      toast.error("Organization name is required");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/organizations/${selectedOrg.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          type: formData.type,
+          description: formData.description.trim() || undefined,
+        }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Failed to update organization");
+      }
+
+      toast.success("Organization updated successfully");
+      setEditDialogOpen(false);
+      setSelectedOrg(null);
+      setFormData({ name: "", type: "STANDARD", description: "" });
+      fetchOrganizations();
+    } catch (error) {
+      console.error("Error updating organization:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to update organization");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedOrg) return;
+
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/organizations/${selectedOrg.id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Failed to delete organization");
+      }
+
+      toast.success("Organization deleted successfully");
+      setDeleteDialogOpen(false);
+      setSelectedOrg(null);
+      fetchOrganizations();
+    } catch (error) {
+      console.error("Error deleting organization:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to delete organization");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const openEditDialog = (org: Organization) => {
+    setSelectedOrg(org);
+    setFormData({
+      name: org.name,
+      type: org.type,
+      description: org.description || "",
+    });
+    setEditDialogOpen(true);
+  };
+
+  const openDeleteDialog = (org: Organization) => {
+    setSelectedOrg(org);
+    setDeleteDialogOpen(true);
   };
 
   const getTypeLabel = (type: string) => {
@@ -173,16 +292,109 @@ export default function OrganizationsPage() {
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setDialogOpen(false)}>
+              <Button variant="outline" onClick={() => setDialogOpen(false)} disabled={submitting}>
                 Cancel
               </Button>
-              <Button onClick={handleSubmit} disabled={!formData.name}>
+              <Button onClick={handleCreate} disabled={!formData.name || submitting}>
+                {submitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Create Organization
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Edit Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Organization</DialogTitle>
+            <DialogDescription>
+              Update the organization details
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-name">Organization Name</Label>
+              <Input
+                id="edit-name"
+                placeholder="Enter organization name"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, name: e.target.value }))
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-type">Organization Type</Label>
+              <Select
+                value={formData.type}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({ ...prev, type: value }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {ORGANIZATION_TYPES.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-description">Description (Optional)</Label>
+              <Textarea
+                id="edit-description"
+                placeholder="Brief description of the organization"
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditDialogOpen(false)} disabled={submitting}>
+              Cancel
+            </Button>
+            <Button onClick={handleUpdate} disabled={!formData.name || submitting}>
+              {submitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Organization</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete &quot;{selectedOrg?.name}&quot;? This action cannot be undone
+              and will also delete all associated audits.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={submitting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={submitting}
+              className="bg-red-500 hover:bg-red-600"
+            >
+              {submitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <Card>
         <CardHeader>
@@ -205,62 +417,80 @@ export default function OrganizationsPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Organization</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Audits</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredOrganizations.map((org) => (
-                <TableRow key={org.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                        <Building2 className="h-5 w-5 text-primary" />
-                      </div>
-                      <div>
-                        <p className="font-medium">{org.name}</p>
-                        {org.description && (
-                          <p className="text-sm text-muted-foreground">
-                            {org.description}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{getTypeLabel(org.type)}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Link
-                      href={`/audits?organizationId=${org.id}`}
-                      className="text-primary hover:underline"
-                    >
-                      {org._count.audits} audit(s)
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    {new Date(org.createdAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" size="icon">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <Trash2 className="h-4 w-4 text-red-500" />
-                      </Button>
-                    </div>
-                  </TableCell>
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : filteredOrganizations.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              {searchQuery ? "No organizations match your search" : "No organizations yet. Create one to get started."}
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Organization</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Audits</TableHead>
+                  <TableHead>Created</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredOrganizations.map((org) => (
+                  <TableRow key={org.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                          <Building2 className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-medium">{org.name}</p>
+                          {org.description && (
+                            <p className="text-sm text-muted-foreground">
+                              {org.description}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{getTypeLabel(org.type)}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Link
+                        href={`/audits?organizationId=${org.id}`}
+                        className="text-primary hover:underline"
+                      >
+                        {org._count.audits} audit(s)
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      {new Date(org.createdAt).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openEditDialog(org)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openDeleteDialog(org)}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-500" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>
