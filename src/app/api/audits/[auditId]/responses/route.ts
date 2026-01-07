@@ -148,8 +148,9 @@ export async function POST(
       );
     }
     console.error('Error creating response:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Failed to create response' },
+      { error: `Failed to create response: ${errorMessage}` },
       { status: 500 }
     );
   }
