@@ -47,6 +47,8 @@ import {
   Link,
   RefreshCw,
   GripVertical,
+  Square,
+  Pause,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -111,12 +113,28 @@ interface AISuggestion {
   };
 }
 
+interface AnalysisJob {
+  id: string;
+  auditId: string;
+  organizationId: string;
+  chapterId: number | null;
+  status: 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
+  totalQuestions: number;
+  processedQuestions: number;
+  failedQuestions: number;
+  errorMessage: string | null;
+  startedAt: string | null;
+  completedAt: string | null;
+  createdAt: string;
+}
+
 export default function AIAnalysisPage() {
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [documents, setDocuments] = useState<Document[]>([]);
   const [audits, setAudits] = useState<Audit[]>([]);
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [suggestions, setSuggestions] = useState<AISuggestion[]>([]);
+  const [currentJob, setCurrentJob] = useState<AnalysisJob | null>(null);
 
   const [selectedOrgId, setSelectedOrgId] = useState<string>("");
   const [selectedAuditId, setSelectedAuditId] = useState<string>("");
@@ -124,14 +142,13 @@ export default function AIAnalysisPage() {
 
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [analyzing, setAnalyzing] = useState(false);
-  const [analysisProgress, setAnalysisProgress] = useState(0);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [deleteDocId, setDeleteDocId] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dropZoneRef = useRef<HTMLDivElement>(null);
+  const processingRef = useRef(false);
 
   const fetchOrganizations = useCallback(async () => {
     try {
@@ -197,7 +214,6 @@ export default function AIAnalysisPage() {
       const res = await fetch(`/api/ai/suggestions?auditId=${selectedAuditId}`);
       if (!res.ok) throw new Error("Failed to fetch suggestions");
       const data = await res.json();
-      // Initialize document link statuses
       const suggestionsWithLinkStatus = data.map((s: AISuggestion) => ({
         ...s,
         sources: s.sources?.map((source: DocumentLink) => ({
@@ -210,6 +226,24 @@ export default function AIAnalysisPage() {
       console.error("Error fetching suggestions:", error);
     } finally {
       setLoading(false);
+    }
+  }, [selectedAuditId]);
+
+  // Check for existing running job
+  const fetchCurrentJob = useCallback(async () => {
+    if (!selectedAuditId) return;
+    try {
+      const res = await fetch(`/api/ai/jobs?auditId=${selectedAuditId}`);
+      if (!res.ok) return;
+      const jobs = await res.json();
+      const runningJob = jobs.find((j: AnalysisJob) =>
+        j.status === 'PENDING' || j.status === 'RUNNING'
+      );
+      if (runningJob) {
+        setCurrentJob(runningJob);
+      }
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
     }
   }, [selectedAuditId]);
 
@@ -229,8 +263,58 @@ export default function AIAnalysisPage() {
     if (selectedAuditId) {
       setLoading(true);
       fetchSuggestions();
+      fetchCurrentJob();
     }
-  }, [selectedAuditId, fetchSuggestions]);
+  }, [selectedAuditId, fetchSuggestions, fetchCurrentJob]);
+
+  // Process the current job
+  const processJobBatch = useCallback(async () => {
+    if (!currentJob || processingRef.current) return;
+    if (currentJob.status !== 'PENDING' && currentJob.status !== 'RUNNING') return;
+
+    processingRef.current = true;
+
+    try {
+      const res = await fetch(`/api/ai/jobs/${currentJob.id}`, {
+        method: 'POST',
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || 'Processing failed');
+      }
+
+      const result = await res.json();
+      setCurrentJob(result.job);
+
+      // Refresh suggestions after each batch
+      fetchSuggestions();
+
+      // If more to process, continue
+      if (result.remaining > 0 && result.job.status === 'RUNNING') {
+        setTimeout(() => {
+          processingRef.current = false;
+          processJobBatch();
+        }, 500);
+      } else {
+        processingRef.current = false;
+        if (result.job.status === 'COMPLETED') {
+          toast.success(`Analysis complete! Processed ${result.job.processedQuestions} questions.`);
+        }
+      }
+    } catch (error) {
+      console.error('Error processing batch:', error);
+      processingRef.current = false;
+      toast.error(error instanceof Error ? error.message : 'Processing failed');
+    }
+  }, [currentJob, fetchSuggestions]);
+
+  // Auto-resume processing when job exists
+  useEffect(() => {
+    if (currentJob && (currentJob.status === 'PENDING' || currentJob.status === 'RUNNING')) {
+      processJobBatch();
+    }
+  }, [currentJob, processJobBatch]);
 
   const uploadFiles = async (files: FileList | File[]) => {
     if (!selectedOrgId) {
@@ -300,7 +384,6 @@ export default function AIAnalysisPage() {
     await uploadFiles(files);
   };
 
-  // Drag and drop handlers
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -310,7 +393,6 @@ export default function AIAnalysisPage() {
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Only set isDragOver to false if we're leaving the drop zone entirely
     if (dropZoneRef.current && !dropZoneRef.current.contains(e.relatedTarget as Node)) {
       setIsDragOver(false);
     }
@@ -353,7 +435,7 @@ export default function AIAnalysisPage() {
     }
   };
 
-  const handleRunAnalysis = async () => {
+  const handleStartAnalysis = async () => {
     if (!selectedAuditId || !selectedOrgId) {
       toast.error("Please select an organization and audit");
       return;
@@ -370,39 +452,48 @@ export default function AIAnalysisPage() {
       return;
     }
 
-    setAnalyzing(true);
-    setAnalysisProgress(0);
-
     try {
-      const res = await fetch("/api/ai/batch-analyze", {
+      const res = await fetch("/api/ai/jobs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           auditId: selectedAuditId,
           organizationId: selectedOrgId,
-          chapterId: selectedChapterId !== "all" ? parseInt(selectedChapterId) : undefined,
+          chapterId: selectedChapterId !== "all" ? selectedChapterId : undefined,
         }),
       });
 
       if (!res.ok) {
         const error = await res.json();
-        throw new Error(error.error || "Analysis failed");
+        throw new Error(error.error || "Failed to start analysis");
       }
 
-      const result = await res.json();
-      setAnalysisProgress(100);
-
-      toast.success(
-        `Analyzed ${result.analyzed} questions. ${result.failed} failed.`
-      );
-
-      fetchSuggestions();
+      const job = await res.json();
+      setCurrentJob(job);
+      toast.success("Analysis started!");
     } catch (error) {
-      console.error("Error running analysis:", error);
-      toast.error(error instanceof Error ? error.message : "Analysis failed");
-    } finally {
-      setAnalyzing(false);
-      setAnalysisProgress(0);
+      console.error("Error starting analysis:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to start analysis");
+    }
+  };
+
+  const handleCancelAnalysis = async () => {
+    if (!currentJob) return;
+
+    try {
+      const res = await fetch(`/api/ai/jobs/${currentJob.id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("Failed to cancel");
+
+      const job = await res.json();
+      setCurrentJob(job);
+      processingRef.current = false;
+      toast.info("Analysis cancelled");
+    } catch (error) {
+      console.error("Error cancelling:", error);
+      toast.error("Failed to cancel analysis");
     }
   };
 
@@ -424,6 +515,28 @@ export default function AIAnalysisPage() {
 
       if (!res.ok) throw new Error("Failed to save response");
 
+      // Get the response to link documents
+      const responseData = await res.json();
+
+      // Link approved documents to the response
+      const approvedDocs = suggestion.sources?.filter(s => s.status === 'approved') || [];
+      for (const doc of approvedDocs) {
+        try {
+          await fetch(`/api/audits/${selectedAuditId}/responses/${responseData.id}/documents`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              documentId: doc.documentId,
+              relevanceScore: doc.relevanceScore,
+              excerpt: doc.excerpt,
+              status: 'approved',
+            }),
+          });
+        } catch (e) {
+          console.error("Error linking document:", e);
+        }
+      }
+
       setSuggestions(prev =>
         prev.map(s => s.id === suggestion.id ? { ...s, status: 'accepted' as const } : s)
       );
@@ -442,7 +555,6 @@ export default function AIAnalysisPage() {
     toast.info("Suggestion rejected");
   };
 
-  // Document link management
   const handleApproveDocLink = (suggestionId: string, docIndex: number) => {
     setSuggestions(prev =>
       prev.map(s => {
@@ -562,6 +674,11 @@ export default function AIAnalysisPage() {
   const rejectedSuggestions = filteredSuggestions.filter(s => s.status === 'rejected');
 
   const processedDocuments = documents.filter(d => d.status === "PROCESSED" || d.status === "COMPLETED");
+
+  const isAnalyzing = currentJob && (currentJob.status === 'PENDING' || currentJob.status === 'RUNNING');
+  const analysisProgress = currentJob && currentJob.totalQuestions > 0
+    ? Math.round((currentJob.processedQuestions / currentJob.totalQuestions) * 100)
+    : 0;
 
   return (
     <div className="space-y-6">
@@ -747,7 +864,7 @@ export default function AIAnalysisPage() {
                         <div>
                           <p className="font-medium">{doc.originalName}</p>
                           <p className="text-xs text-muted-foreground">
-                            {formatFileSize(doc.fileSize)} • {doc._count?.chunks || 0} chunks
+                            {formatFileSize(doc.fileSize)} {doc._count?.chunks ? `• ${doc._count.chunks} chunks` : ''}
                           </p>
                         </div>
                       </div>
@@ -779,14 +896,15 @@ export default function AIAnalysisPage() {
                 Run Global Analysis
               </CardTitle>
               <CardDescription>
-                AI will analyze ALL documents and suggest answers for ALL DORA compliance questions
+                AI will analyze ALL documents and suggest answers for ALL DORA compliance questions.
+                Analysis progress is saved - you can refresh without losing progress.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Filter by Chapter</label>
-                  <Select value={selectedChapterId} onValueChange={setSelectedChapterId}>
+                  <Select value={selectedChapterId} onValueChange={setSelectedChapterId} disabled={!!isAnalyzing}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -801,28 +919,59 @@ export default function AIAnalysisPage() {
                   </Select>
                 </div>
 
-                <div className="flex items-end">
-                  <Button
-                    onClick={handleRunAnalysis}
-                    disabled={!selectedAuditId || processedDocuments.length === 0 || analyzing}
-                    className="w-full"
-                  >
-                    {analyzing ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Analyzing all questions...
-                      </>
-                    ) : (
-                      <>
-                        <Play className="h-4 w-4 mr-2" />
-                        Run AI Analysis ({processedDocuments.length} docs)
-                      </>
-                    )}
-                  </Button>
+                <div className="flex items-end gap-2">
+                  {isAnalyzing ? (
+                    <Button
+                      onClick={handleCancelAnalysis}
+                      variant="destructive"
+                      className="w-full"
+                    >
+                      <Square className="h-4 w-4 mr-2" />
+                      Stop Analysis
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleStartAnalysis}
+                      disabled={!selectedAuditId || processedDocuments.length === 0}
+                      className="w-full"
+                    >
+                      <Play className="h-4 w-4 mr-2" />
+                      Run AI Analysis ({processedDocuments.length} docs)
+                    </Button>
+                  )}
                 </div>
               </div>
 
-              {analyzing && <Progress value={analysisProgress} />}
+              {isAnalyzing && currentJob && (
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>
+                      Analyzing... {currentJob.processedQuestions}/{currentJob.totalQuestions} questions
+                    </span>
+                    <span>{analysisProgress}%</span>
+                  </div>
+                  <Progress value={analysisProgress} className="h-2" />
+                  {currentJob.failedQuestions > 0 && (
+                    <p className="text-xs text-orange-600">
+                      {currentJob.failedQuestions} questions failed
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {currentJob?.status === 'FAILED' && (
+                <div className="p-4 bg-red-50 dark:bg-red-950 rounded-lg flex items-center gap-3">
+                  <XCircle className="h-5 w-5 text-red-600" />
+                  <div>
+                    <p className="font-medium text-red-800 dark:text-red-200">
+                      Analysis failed
+                    </p>
+                    <p className="text-sm text-red-700 dark:text-red-300">
+                      {currentJob.errorMessage || 'Unknown error occurred'}
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {processedDocuments.length === 0 && documents.length > 0 && (
                 <div className="p-4 bg-yellow-50 dark:bg-yellow-950 rounded-lg flex items-center gap-3">

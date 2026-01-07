@@ -147,10 +147,11 @@ model Response {
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
-  audit       Audit      @relation(fields: [auditId], references: [id], onDelete: Cascade)
-  question    Question   @relation(fields: [questionId], references: [id])
-  user        User       @relation(fields: [userId], references: [id])
-  evidences   Evidence[]
+  audit         Audit      @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  question      Question   @relation(fields: [questionId], references: [id])
+  user          User       @relation(fields: [userId], references: [id])
+  evidences     Evidence[]
+  documentLinks ResponseDocumentLink[]
 
   @@unique([auditId, questionId])
   @@map("responses")
@@ -231,6 +232,7 @@ model Document {
 
   organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   chunks         DocumentChunk[]
+  responseLinks  ResponseDocumentLink[]
 
   @@index([organizationId])
   @@index([status])
@@ -294,4 +296,50 @@ model Settings {
   updatedAt DateTime @updatedAt
 
   @@map("settings")
+}
+
+// AI Analysis Jobs - track long-running analysis
+model AIAnalysisJob {
+  id             String           @id @default(cuid())
+  auditId        String
+  organizationId String
+  chapterId      Int?             // null = all chapters
+  status         AnalysisJobStatus @default(PENDING)
+  totalQuestions Int              @default(0)
+  processedQuestions Int          @default(0)
+  failedQuestions Int             @default(0)
+  errorMessage   String?
+  startedAt      DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime         @default(now())
+
+  @@index([auditId])
+  @@index([status])
+  @@map("ai_analysis_jobs")
+}
+
+enum AnalysisJobStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+// Link approved documents to specific responses
+model ResponseDocumentLink {
+  id            String   @id @default(cuid())
+  responseId    String
+  documentId    String
+  relevanceScore Float?
+  excerpt       String?
+  status        String   @default("pending") // pending, approved, rejected
+  createdAt     DateTime @default(now())
+
+  response      Response @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  document      Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([responseId, documentId])
+  @@index([responseId])
+  @@map("response_document_links")
 }
