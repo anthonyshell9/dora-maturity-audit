@@ -70,24 +70,19 @@ export async function POST(
       );
     }
 
-    // If questionId provided, find or create response
+    // If questionId provided, find existing response
     if (!responseId && questionId) {
       console.log('Looking for existing response with auditId:', auditId, 'questionId:', questionId);
 
-      let existingResponse = await prisma.response.findFirst({
+      const existingResponse = await prisma.response.findFirst({
         where: { auditId, questionId },
       });
 
       if (!existingResponse) {
-        console.log('Creating new response');
-        existingResponse = await prisma.response.create({
-          data: {
-            audit: { connect: { id: auditId } },
-            question: { connect: { id: questionId } },
-            answer: 'NO_ANSWER',
-          },
-        });
-        console.log('Created response:', existingResponse.id);
+        return NextResponse.json(
+          { error: 'Please save your response first before uploading evidence files.' },
+          { status: 400 }
+        );
       }
       responseId = existingResponse.id;
     }
