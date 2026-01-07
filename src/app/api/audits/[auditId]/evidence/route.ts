@@ -16,23 +16,33 @@ export async function POST(
 ) {
   try {
     const { auditId } = await params;
+
+    console.log('Evidence upload started for audit:', auditId);
+
     const formData = await request.formData();
 
     // Support both 'file' (single) and 'files' (multiple)
     const files: File[] = [];
-    const singleFile = formData.get('file') as File | null;
-    const multipleFiles = formData.getAll('files') as File[];
+    const singleFile = formData.get('file');
+    const multipleFiles = formData.getAll('files');
 
-    if (singleFile) {
+    // Filter to only include actual File objects
+    if (singleFile && singleFile instanceof File && singleFile.size > 0) {
       files.push(singleFile);
     }
-    if (multipleFiles.length > 0) {
-      files.push(...multipleFiles);
+    for (const f of multipleFiles) {
+      if (f instanceof File && f.size > 0) {
+        files.push(f);
+      }
     }
+
+    console.log('Files received:', files.length, files.map(f => ({ name: f.name, size: f.size, type: f.type })));
 
     // Support both responseId and questionId
     let responseId = formData.get('responseId') as string | null;
     const questionId = formData.get('questionId') as string | null;
+
+    console.log('IDs:', { responseId, questionId });
 
     if (files.length === 0) {
       return NextResponse.json(
@@ -48,13 +58,28 @@ export async function POST(
       );
     }
 
+    // First verify the audit exists
+    const audit = await prisma.audit.findUnique({
+      where: { id: auditId },
+    });
+
+    if (!audit) {
+      return NextResponse.json(
+        { error: 'Audit not found' },
+        { status: 404 }
+      );
+    }
+
     // If questionId provided, find or create response
     if (!responseId && questionId) {
+      console.log('Looking for existing response with auditId:', auditId, 'questionId:', questionId);
+
       let existingResponse = await prisma.response.findFirst({
         where: { auditId, questionId },
       });
 
       if (!existingResponse) {
+        console.log('Creating new response');
         existingResponse = await prisma.response.create({
           data: {
             auditId,
@@ -62,6 +87,7 @@ export async function POST(
             answer: 'NO_ANSWER',
           },
         });
+        console.log('Created response:', existingResponse.id);
       }
       responseId = existingResponse.id;
     }
@@ -163,8 +189,9 @@ export async function POST(
     );
   } catch (error) {
     console.error('Error uploading evidence:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Failed to upload evidence' },
+      { error: `Failed to upload evidence: ${errorMessage}` },
       { status: 500 }
     );
   }
