@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -17,7 +18,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   ArrowLeft,
   ArrowRight,
@@ -33,6 +42,10 @@ import {
   Loader2,
   Brain,
   Sparkles,
+  Link as LinkIcon,
+  Plus,
+  RefreshCw,
+  MessageSquare,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -40,6 +53,29 @@ interface Evidence {
   id: string;
   fileName: string;
   fileUrl: string;
+}
+
+interface DocumentLink {
+  id: string;
+  documentId: string;
+  relevanceScore: number | null;
+  excerpt: string | null;
+  status: string;
+  document: {
+    id: string;
+    name: string;
+    originalName: string;
+    fileType: string;
+    fileUrl: string;
+  };
+}
+
+interface Document {
+  id: string;
+  name: string;
+  originalName: string;
+  fileType: string;
+  status: string;
 }
 
 interface Question {
@@ -62,6 +98,7 @@ interface Response {
   answer: "YES" | "NO" | "NA" | "NO_ANSWER";
   notes: string | null;
   evidences: Evidence[];
+  documentLinks?: DocumentLink[];
 }
 
 interface Chapter {
@@ -87,6 +124,13 @@ interface AISuggestion {
   suggestion: string;
   confidence: number;
   reasoning: string;
+  evidenceDescription?: string;
+  sources?: Array<{
+    documentId: string;
+    documentName: string;
+    relevanceScore: number;
+    excerpt?: string;
+  }>;
 }
 
 export default function AuditDetailPage({
@@ -103,12 +147,19 @@ export default function AuditDetailPage({
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [localResponses, setLocalResponses] = useState<Record<string, { answer: string; notes: string }>>({});
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [addDocDialogOpen, setAddDocDialogOpen] = useState(false);
+  const [reanalyzeDialogOpen, setReanalyzeDialogOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [savingAll, setSavingAll] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [aiSuggestion, setAiSuggestion] = useState<AISuggestion | null>(null);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [linkedDocuments, setLinkedDocuments] = useState<DocumentLink[]>([]);
+  const [availableDocuments, setAvailableDocuments] = useState<Document[]>([]);
+  const [selectedDocToAdd, setSelectedDocToAdd] = useState<string>("");
+  const [additionalContext, setAdditionalContext] = useState("");
+  const [selectedDocsForAnalysis, setSelectedDocsForAnalysis] = useState<string[]>([]);
 
   // Fetch audit data
   const fetchAudit = useCallback(async () => {
@@ -164,6 +215,44 @@ export default function AuditDetailPage({
     }
   }, [auditId, activeChapter]);
 
+  // Fetch linked documents for current question
+  const fetchLinkedDocuments = useCallback(async () => {
+    const currentQuestion = questions[currentQuestionIndex];
+    if (!currentQuestion || !audit) return;
+
+    const response = audit.responses?.find(r => r.questionId === currentQuestion.id);
+    if (!response) {
+      setLinkedDocuments([]);
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/audits/${auditId}/responses/${response.id}/documents`);
+      if (!res.ok) {
+        setLinkedDocuments([]);
+        return;
+      }
+      const data = await res.json();
+      setLinkedDocuments(data);
+    } catch (error) {
+      console.error("Error fetching linked documents:", error);
+      setLinkedDocuments([]);
+    }
+  }, [auditId, audit, questions, currentQuestionIndex]);
+
+  // Fetch available documents for the organization
+  const fetchAvailableDocuments = useCallback(async () => {
+    if (!audit?.organization.id) return;
+    try {
+      const res = await fetch(`/api/documents?organizationId=${audit.organization.id}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      setAvailableDocuments(data.filter((d: Document) => d.status === "COMPLETED" || d.status === "PROCESSED"));
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+    }
+  }, [audit?.organization.id]);
+
   useEffect(() => {
     fetchAudit();
     fetchChapters();
@@ -176,7 +265,16 @@ export default function AuditDetailPage({
     }
   }, [activeChapter, fetchQuestions]);
 
+  useEffect(() => {
+    fetchLinkedDocuments();
+  }, [fetchLinkedDocuments]);
+
+  useEffect(() => {
+    fetchAvailableDocuments();
+  }, [fetchAvailableDocuments]);
+
   const currentQuestion = questions[currentQuestionIndex];
+  const currentResponse = audit?.responses?.find(r => r.questionId === currentQuestion?.id);
 
   const getAnswerIcon = (answer?: string) => {
     switch (answer) {
@@ -229,7 +327,7 @@ export default function AuditDetailPage({
 
       if (!res.ok) throw new Error("Failed to save response");
       toast.success("Response saved");
-      fetchAudit(); // Refresh to get updated response count
+      fetchAudit();
     } catch (error) {
       console.error("Error saving response:", error);
       toast.error("Failed to save response");
@@ -306,22 +404,77 @@ export default function AuditDetailPage({
     }
   };
 
-  const handleAIAnalysis = async () => {
+  const handleAddDocumentLink = async () => {
+    if (!selectedDocToAdd || !currentResponse) {
+      toast.error("Please select a document and save the response first");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/audits/${auditId}/responses/${currentResponse.id}/documents`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          documentId: selectedDocToAdd,
+          status: "approved",
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to link document");
+      toast.success("Document linked successfully");
+      setAddDocDialogOpen(false);
+      setSelectedDocToAdd("");
+      fetchLinkedDocuments();
+    } catch (error) {
+      console.error("Error linking document:", error);
+      toast.error("Failed to link document");
+    }
+  };
+
+  const handleRemoveDocumentLink = async (linkId: string) => {
+    if (!currentResponse) return;
+
+    try {
+      const res = await fetch(`/api/audits/${auditId}/responses/${currentResponse.id}/documents?linkId=${linkId}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("Failed to remove link");
+      toast.success("Document link removed");
+      fetchLinkedDocuments();
+    } catch (error) {
+      console.error("Error removing link:", error);
+      toast.error("Failed to remove document link");
+    }
+  };
+
+  const handleAIAnalysis = async (withContext = false) => {
     if (!currentQuestion) return;
 
     setAnalyzing(true);
     setAiSuggestion(null);
 
     try {
+      const body: Record<string, unknown> = {
+        auditId,
+        questionId: currentQuestion.id,
+        questionText: currentQuestion.text,
+        organizationId: audit?.organization.id,
+      };
+
+      if (withContext) {
+        if (additionalContext) {
+          body.additionalContext = additionalContext;
+        }
+        if (selectedDocsForAnalysis.length > 0) {
+          body.specificDocumentIds = selectedDocsForAnalysis;
+        }
+      }
+
       const res = await fetch("/api/ai/analyze-question", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          auditId,
-          questionId: currentQuestion.id,
-          questionText: currentQuestion.text,
-          organizationId: audit?.organization.id,
-        }),
+        body: JSON.stringify(body),
       });
 
       if (!res.ok) {
@@ -331,8 +484,8 @@ export default function AuditDetailPage({
 
       const suggestion = await res.json();
       setAiSuggestion(suggestion);
+      setReanalyzeDialogOpen(false);
 
-      // Auto-fill response if user wants
       if (suggestion.suggestion && suggestion.suggestion !== "INSUFFICIENT_INFO") {
         toast.success("AI suggestion ready! Review and apply if appropriate.");
       }
@@ -344,7 +497,7 @@ export default function AuditDetailPage({
     }
   };
 
-  const applyAISuggestion = () => {
+  const applyAISuggestion = async () => {
     if (!aiSuggestion || !currentQuestion) return;
 
     const answer = aiSuggestion.suggestion === "YES" ? "YES"
@@ -356,9 +509,39 @@ export default function AuditDetailPage({
       ...prev,
       [currentQuestion.id]: {
         answer,
-        notes: `[AI Suggestion - ${Math.round(aiSuggestion.confidence * 100)}% confidence]\n${aiSuggestion.reasoning}`,
+        notes: `[AI Suggestion - ${Math.round(aiSuggestion.confidence * 100)}% confidence]\n${aiSuggestion.reasoning}${aiSuggestion.evidenceDescription ? `\n\nEvidence: ${aiSuggestion.evidenceDescription}` : ''}`,
       },
     }));
+
+    // Save the response first
+    await handleSaveResponse(currentQuestion.id);
+
+    // Then link the source documents if available
+    if (aiSuggestion.sources && aiSuggestion.sources.length > 0) {
+      await fetchAudit(); // Refresh to get the response ID
+      const updatedAudit = audit;
+      const response = updatedAudit?.responses?.find(r => r.questionId === currentQuestion.id);
+
+      if (response) {
+        for (const source of aiSuggestion.sources) {
+          try {
+            await fetch(`/api/audits/${auditId}/responses/${response.id}/documents`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                documentId: source.documentId,
+                relevanceScore: source.relevanceScore,
+                excerpt: source.excerpt,
+                status: "approved",
+              }),
+            });
+          } catch (e) {
+            console.error("Error linking document:", e);
+          }
+        }
+        fetchLinkedDocuments();
+      }
+    }
 
     toast.success("AI suggestion applied");
   };
@@ -375,7 +558,6 @@ export default function AuditDetailPage({
         return q?.article?.chapter?.id === chapter.id;
       }).length || 0;
 
-      // Use local responses for current session
       const localAnsweredCount = Object.entries(localResponses).filter(
         ([qId, r]) => {
           const q = questions.find((q) => q.id === qId);
@@ -574,26 +756,110 @@ export default function AuditDetailPage({
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* AI Analysis Button */}
+                {/* AI Analysis Section */}
                 <div className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950 rounded-lg">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Brain className="h-5 w-5 text-purple-500" />
                       <span className="font-medium">AI Assistant</span>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleAIAnalysis}
-                      disabled={analyzing}
-                    >
-                      {analyzing ? (
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      ) : (
-                        <Sparkles className="h-4 w-4 mr-2" />
-                      )}
-                      Analyze Documents
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Dialog open={reanalyzeDialogOpen} onOpenChange={setReanalyzeDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            <MessageSquare className="h-4 w-4 mr-2" />
+                            Analyze with Context
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-lg">
+                          <DialogHeader>
+                            <DialogTitle>Re-analyze with Context</DialogTitle>
+                            <DialogDescription>
+                              Add context to help the AI understand what to look for
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <Label>Additional Context (optional)</Label>
+                              <Textarea
+                                placeholder="E.g., 'Look for information about backup policies in the IT security document...'"
+                                value={additionalContext}
+                                onChange={(e) => setAdditionalContext(e.target.value)}
+                                rows={3}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Specific Documents (optional)</Label>
+                              <Select
+                                value=""
+                                onValueChange={(value) => {
+                                  if (!selectedDocsForAnalysis.includes(value)) {
+                                    setSelectedDocsForAnalysis([...selectedDocsForAnalysis, value]);
+                                  }
+                                }}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select documents to focus on..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {availableDocuments.map((doc) => (
+                                    <SelectItem key={doc.id} value={doc.id}>
+                                      {doc.originalName || doc.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              {selectedDocsForAnalysis.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mt-2">
+                                  {selectedDocsForAnalysis.map((docId) => {
+                                    const doc = availableDocuments.find((d) => d.id === docId);
+                                    return (
+                                      <Badge key={docId} variant="secondary" className="gap-1">
+                                        {doc?.originalName || doc?.name}
+                                        <button
+                                          onClick={() => setSelectedDocsForAnalysis(
+                                            selectedDocsForAnalysis.filter((id) => id !== docId)
+                                          )}
+                                          className="ml-1 hover:text-red-500"
+                                        >
+                                          ×
+                                        </button>
+                                      </Badge>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button variant="outline" onClick={() => setReanalyzeDialogOpen(false)}>
+                              Cancel
+                            </Button>
+                            <Button onClick={() => handleAIAnalysis(true)} disabled={analyzing}>
+                              {analyzing ? (
+                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              ) : (
+                                <RefreshCw className="h-4 w-4 mr-2" />
+                              )}
+                              Re-analyze
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleAIAnalysis(false)}
+                        disabled={analyzing}
+                      >
+                        {analyzing ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <Sparkles className="h-4 w-4 mr-2" />
+                        )}
+                        Quick Analyze
+                      </Button>
+                    </div>
                   </div>
 
                   {aiSuggestion && (
@@ -612,6 +878,11 @@ export default function AuditDetailPage({
                         </span>
                       </div>
                       <p className="text-sm">{aiSuggestion.reasoning}</p>
+                      {aiSuggestion.sources && aiSuggestion.sources.length > 0 && (
+                        <div className="text-xs text-muted-foreground">
+                          Sources: {aiSuggestion.sources.map(s => s.documentName).join(", ")}
+                        </div>
+                      )}
                       <Button size="sm" onClick={applyAISuggestion}>
                         Apply Suggestion
                       </Button>
@@ -667,6 +938,98 @@ export default function AuditDetailPage({
                   />
                 </div>
 
+                {/* Linked Documents from AI Analysis */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <LinkIcon className="h-4 w-4" />
+                      <Label>Linked Documents ({linkedDocuments.length})</Label>
+                    </div>
+                    <Dialog open={addDocDialogOpen} onOpenChange={setAddDocDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm" disabled={!currentResponse}>
+                          <Plus className="h-4 w-4 mr-2" />
+                          Add Document
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Link Document</DialogTitle>
+                          <DialogDescription>
+                            Select a document from your organization&apos;s document base
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                          <Select value={selectedDocToAdd} onValueChange={setSelectedDocToAdd}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a document..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {availableDocuments
+                                .filter((d) => !linkedDocuments.some((l) => l.documentId === d.id))
+                                .map((doc) => (
+                                  <SelectItem key={doc.id} value={doc.id}>
+                                    {doc.originalName || doc.name}
+                                  </SelectItem>
+                                ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <DialogFooter>
+                          <Button variant="outline" onClick={() => setAddDocDialogOpen(false)}>
+                            Cancel
+                          </Button>
+                          <Button onClick={handleAddDocumentLink} disabled={!selectedDocToAdd}>
+                            Link Document
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+
+                  {!currentResponse && (
+                    <p className="text-sm text-muted-foreground">
+                      Save your response first to link documents
+                    </p>
+                  )}
+
+                  {linkedDocuments.length > 0 ? (
+                    <div className="space-y-2">
+                      {linkedDocuments.map((link) => (
+                        <div
+                          key={link.id}
+                          className="flex items-center justify-between p-3 bg-muted rounded-lg"
+                        >
+                          <div className="flex items-center gap-2">
+                            <FileText className="h-4 w-4 text-muted-foreground" />
+                            <div>
+                              <span className="text-sm font-medium">
+                                {link.document.originalName || link.document.name}
+                              </span>
+                              {link.relevanceScore && (
+                                <span className="text-xs text-muted-foreground ml-2">
+                                  ({Math.round(link.relevanceScore * 100)}% relevant)
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleRemoveDocumentLink(link.id)}
+                          >
+                            <Trash2 className="h-4 w-4 text-red-500" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : currentResponse ? (
+                    <p className="text-sm text-muted-foreground">
+                      No documents linked yet. Add from your document base or run AI analysis.
+                    </p>
+                  ) : null}
+                </div>
+
                 {/* Evidence Files */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -682,7 +1045,7 @@ export default function AuditDetailPage({
                         <DialogHeader>
                           <DialogTitle>Upload Evidence</DialogTitle>
                           <DialogDescription>
-                            Upload files to support your answer. The AI will analyze these documents.
+                            Upload files to support your answer.
                           </DialogDescription>
                         </DialogHeader>
                         <div className="space-y-4">
@@ -710,9 +1073,26 @@ export default function AuditDetailPage({
                     </Dialog>
                   </div>
 
-                  {/* Uploaded files display */}
-                  {uploadedFiles.length > 0 ? (
+                  {uploadedFiles.length > 0 || (currentResponse?.evidences?.length || 0) > 0 ? (
                     <div className="space-y-2">
+                      {currentResponse?.evidences?.map((ev) => (
+                        <div
+                          key={ev.id}
+                          className="flex items-center justify-between p-3 bg-muted rounded-lg"
+                        >
+                          <div className="flex items-center gap-2">
+                            <FileText className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm">{ev.fileName}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Button variant="ghost" size="icon" asChild>
+                              <a href={ev.fileUrl} target="_blank" rel="noopener noreferrer">
+                                <Download className="h-4 w-4" />
+                              </a>
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
                       {uploadedFiles.map((file, idx) => (
                         <div
                           key={idx}
@@ -736,7 +1116,7 @@ export default function AuditDetailPage({
                     </div>
                   ) : (
                     <p className="text-sm text-muted-foreground">
-                      No evidence files uploaded yet. Upload documents for AI analysis.
+                      No evidence files uploaded yet.
                     </p>
                   )}
                 </div>
