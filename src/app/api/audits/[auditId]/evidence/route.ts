@@ -82,8 +82,8 @@ export async function POST(
         console.log('Creating new response');
         existingResponse = await prisma.response.create({
           data: {
-            auditId,
-            questionId,
+            audit: { connect: { id: auditId } },
+            question: { connect: { id: questionId } },
             answer: 'NO_ANSWER',
           },
         });
