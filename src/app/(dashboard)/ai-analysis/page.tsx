@@ -310,7 +310,7 @@ export default function AIAnalysisPage() {
       return;
     }
 
-    const processedDocs = documents.filter(d => d.status === "PROCESSED");
+    const processedDocs = documents.filter(d => d.status === "PROCESSED" || d.status === "COMPLETED");
     if (processedDocs.length === 0) {
       toast.error("Please wait for documents to finish processing");
       return;
@@ -424,12 +424,14 @@ export default function AIAnalysisPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "PROCESSED":
+      case "COMPLETED":
         return <Badge className="bg-green-100 text-green-700">Ready</Badge>;
       case "PROCESSING":
         return <Badge className="bg-blue-100 text-blue-700">Processing...</Badge>;
       case "PENDING":
         return <Badge className="bg-yellow-100 text-yellow-700">Pending</Badge>;
       case "FAILED":
+      case "ERROR":
         return <Badge className="bg-red-100 text-red-700">Failed</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
@@ -454,7 +456,7 @@ export default function AIAnalysisPage() {
   const acceptedSuggestions = filteredSuggestions.filter(s => s.status === 'accepted');
   const rejectedSuggestions = filteredSuggestions.filter(s => s.status === 'rejected');
 
-  const processedDocuments = documents.filter(d => d.status === "PROCESSED");
+  const processedDocuments = documents.filter(d => d.status === "PROCESSED" || d.status === "COMPLETED");
 
   return (
     <div className="space-y-6">
