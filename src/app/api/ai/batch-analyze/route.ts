@@ -12,7 +12,7 @@ export const maxDuration = 300; // 5 minutes for long-running batch analysis
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { auditId, organizationId, chapterId, limit = 10 } = body;
+    const { auditId, organizationId, chapterId } = body;
 
     if (!auditId || !organizationId) {
       return NextResponse.json(
@@ -52,10 +52,9 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Filter to questions without suggestions and limit
+    // Filter to questions without suggestions (analyze ALL questions)
     const questionsToAnalyze = allQuestions
-      .filter(q => !existingQuestionIds.has(q.id))
-      .slice(0, limit);
+      .filter(q => !existingQuestionIds.has(q.id));
 
     if (questionsToAnalyze.length === 0) {
       return NextResponse.json({

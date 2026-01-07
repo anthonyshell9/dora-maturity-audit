@@ -46,6 +46,7 @@ import {
   X,
   Link,
   RefreshCw,
+  GripVertical,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -83,6 +84,7 @@ interface DocumentLink {
   documentName: string;
   relevanceScore: number;
   excerpt?: string;
+  status?: 'pending' | 'approved' | 'rejected';
 }
 
 interface AISuggestion {
@@ -126,8 +128,10 @@ export default function AIAnalysisPage() {
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [deleteDocId, setDeleteDocId] = useState<string | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dropZoneRef = useRef<HTMLDivElement>(null);
 
   const fetchOrganizations = useCallback(async () => {
     try {
@@ -193,7 +197,15 @@ export default function AIAnalysisPage() {
       const res = await fetch(`/api/ai/suggestions?auditId=${selectedAuditId}`);
       if (!res.ok) throw new Error("Failed to fetch suggestions");
       const data = await res.json();
-      setSuggestions(data);
+      // Initialize document link statuses
+      const suggestionsWithLinkStatus = data.map((s: AISuggestion) => ({
+        ...s,
+        sources: s.sources?.map((source: DocumentLink) => ({
+          ...source,
+          status: source.status || 'pending'
+        })) || []
+      }));
+      setSuggestions(suggestionsWithLinkStatus);
     } catch (error) {
       console.error("Error fetching suggestions:", error);
     } finally {
@@ -220,11 +232,15 @@ export default function AIAnalysisPage() {
     }
   }, [selectedAuditId, fetchSuggestions]);
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0 || !selectedOrgId) return;
+  const uploadFiles = async (files: FileList | File[]) => {
+    if (!selectedOrgId) {
+      toast.error("Please select an organization first");
+      return;
+    }
 
-    if (documents.length + files.length > 100) {
+    const fileArray = Array.from(files);
+
+    if (documents.length + fileArray.length > 100) {
       toast.error("Maximum 100 documents allowed per organization");
       return;
     }
@@ -232,11 +248,11 @@ export default function AIAnalysisPage() {
     setUploading(true);
     setUploadProgress(0);
 
-    const totalFiles = files.length;
+    const totalFiles = fileArray.length;
     let uploadedCount = 0;
     let failedCount = 0;
 
-    for (const file of Array.from(files)) {
+    for (const file of fileArray) {
       try {
         const formData = new FormData();
         formData.append("file", file);
@@ -275,7 +291,45 @@ export default function AIAnalysisPage() {
     }
 
     fetchDocuments();
-    fetchOrganizations(); // Refresh document counts
+    fetchOrganizations();
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    await uploadFiles(files);
+  };
+
+  // Drag and drop handlers
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Only set isDragOver to false if we're leaving the drop zone entirely
+    if (dropZoneRef.current && !dropZoneRef.current.contains(e.relatedTarget as Node)) {
+      setIsDragOver(false);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      await uploadFiles(files);
+    }
   };
 
   const handleDeleteDocument = async () => {
@@ -356,7 +410,6 @@ export default function AIAnalysisPage() {
     if (!selectedAuditId) return;
 
     try {
-      // Create/update response with the AI suggestion
       const res = await fetch(`/api/audits/${selectedAuditId}/responses`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -371,7 +424,6 @@ export default function AIAnalysisPage() {
 
       if (!res.ok) throw new Error("Failed to save response");
 
-      // Update local state
       setSuggestions(prev =>
         prev.map(s => s.id === suggestion.id ? { ...s, status: 'accepted' as const } : s)
       );
@@ -388,6 +440,48 @@ export default function AIAnalysisPage() {
       prev.map(s => s.id === suggestionId ? { ...s, status: 'rejected' as const } : s)
     );
     toast.info("Suggestion rejected");
+  };
+
+  // Document link management
+  const handleApproveDocLink = (suggestionId: string, docIndex: number) => {
+    setSuggestions(prev =>
+      prev.map(s => {
+        if (s.id === suggestionId) {
+          const newSources = [...s.sources];
+          newSources[docIndex] = { ...newSources[docIndex], status: 'approved' as const };
+          return { ...s, sources: newSources };
+        }
+        return s;
+      })
+    );
+    toast.success("Document link approved");
+  };
+
+  const handleRejectDocLink = (suggestionId: string, docIndex: number) => {
+    setSuggestions(prev =>
+      prev.map(s => {
+        if (s.id === suggestionId) {
+          const newSources = [...s.sources];
+          newSources[docIndex] = { ...newSources[docIndex], status: 'rejected' as const };
+          return { ...s, sources: newSources };
+        }
+        return s;
+      })
+    );
+    toast.info("Document link rejected");
+  };
+
+  const handleRemoveDocLink = (suggestionId: string, docIndex: number) => {
+    setSuggestions(prev =>
+      prev.map(s => {
+        if (s.id === suggestionId) {
+          const newSources = s.sources.filter((_, idx) => idx !== docIndex);
+          return { ...s, sources: newSources };
+        }
+        return s;
+      })
+    );
+    toast.success("Document link removed");
   };
 
   const getSuggestionBadge = (suggestion: string, confidence: number) => {
@@ -435,6 +529,17 @@ export default function AIAnalysisPage() {
         return <Badge className="bg-red-100 text-red-700">Failed</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
+    }
+  };
+
+  const getDocLinkStatusBadge = (status?: string) => {
+    switch (status) {
+      case "approved":
+        return <Badge className="bg-green-100 text-green-700 text-xs">Approved</Badge>;
+      case "rejected":
+        return <Badge className="bg-red-100 text-red-700 text-xs">Rejected</Badge>;
+      default:
+        return <Badge variant="outline" className="text-xs">Pending</Badge>;
     }
   };
 
@@ -538,11 +643,23 @@ export default function AIAnalysisPage() {
                 Upload Documents
               </CardTitle>
               <CardDescription>
-                Upload up to 100 documents (PDF, DOCX, XLSX, TXT). AI will extract and analyze content.
+                Drag & drop files or click to upload. Up to 100 documents (PDF, DOCX, XLSX, TXT).
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="border-2 border-dashed rounded-lg p-8 text-center">
+              <div
+                ref={dropZoneRef}
+                className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
+                  isDragOver
+                    ? "border-primary bg-primary/5"
+                    : "border-muted-foreground/25 hover:border-primary/50"
+                } ${uploading || !selectedOrgId || documents.length >= 100 ? "opacity-50 cursor-not-allowed" : ""}`}
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                onClick={() => !uploading && selectedOrgId && documents.length < 100 && fileInputRef.current?.click()}
+              >
                 <Input
                   ref={fileInputRef}
                   type="file"
@@ -552,28 +669,47 @@ export default function AIAnalysisPage() {
                   onChange={handleFileUpload}
                   disabled={uploading || !selectedOrgId || documents.length >= 100}
                 />
-                <FileUp className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <Button
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploading || !selectedOrgId || documents.length >= 100}
-                >
-                  {uploading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Uploading... {uploadProgress}%
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="h-4 w-4 mr-2" />
-                      Select Files
-                    </>
-                  )}
-                </Button>
-                <p className="text-sm text-muted-foreground mt-2">
-                  {documents.length >= 100
-                    ? "Maximum documents reached"
-                    : `${100 - documents.length} slots remaining`}
-                </p>
+                {isDragOver ? (
+                  <>
+                    <Upload className="h-12 w-12 mx-auto text-primary mb-4 animate-bounce" />
+                    <p className="text-lg font-medium text-primary">Drop files here</p>
+                  </>
+                ) : (
+                  <>
+                    <FileUp className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    {uploading ? (
+                      <div className="space-y-2">
+                        <Loader2 className="h-6 w-6 mx-auto animate-spin text-primary" />
+                        <p className="text-sm font-medium">Uploading... {uploadProgress}%</p>
+                      </div>
+                    ) : (
+                      <>
+                        <p className="text-lg font-medium mb-1">
+                          Drag & drop files here
+                        </p>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          or click to browse
+                        </p>
+                        <Button
+                          variant="outline"
+                          disabled={uploading || !selectedOrgId || documents.length >= 100}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            fileInputRef.current?.click();
+                          }}
+                        >
+                          <Upload className="h-4 w-4 mr-2" />
+                          Select Files
+                        </Button>
+                      </>
+                    )}
+                    <p className="text-sm text-muted-foreground mt-4">
+                      {documents.length >= 100
+                        ? "Maximum documents reached"
+                        : `${100 - documents.length} slots remaining`}
+                    </p>
+                  </>
+                )}
               </div>
 
               {uploading && (
@@ -643,7 +779,7 @@ export default function AIAnalysisPage() {
                 Run Global Analysis
               </CardTitle>
               <CardDescription>
-                AI will analyze all documents and suggest answers for DORA compliance questions
+                AI will analyze ALL documents and suggest answers for ALL DORA compliance questions
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -655,7 +791,7 @@ export default function AIAnalysisPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">All Chapters</SelectItem>
+                      <SelectItem value="all">All Chapters (334 questions)</SelectItem>
                       {chapters.map((chapter) => (
                         <SelectItem key={chapter.id} value={chapter.id.toString()}>
                           Chapter {chapter.id}: {chapter.title}
@@ -674,7 +810,7 @@ export default function AIAnalysisPage() {
                     {analyzing ? (
                       <>
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Analyzing... {analysisProgress}%
+                        Analyzing all questions...
                       </>
                     ) : (
                       <>
@@ -760,7 +896,7 @@ export default function AIAnalysisPage() {
             <CardHeader>
               <CardTitle>AI Suggestions</CardTitle>
               <CardDescription>
-                Review AI suggestions and accept or reject them. Accepted suggestions will be saved as responses.
+                Review AI suggestions and accept or reject them. Manage linked documents for each suggestion.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -832,24 +968,70 @@ export default function AIAnalysisPage() {
                             <div>
                               <h4 className="font-medium mb-2 flex items-center gap-2">
                                 <Link className="h-4 w-4" />
-                                Linked Documents
+                                Linked Documents ({suggestion.sources.length})
                               </h4>
                               <div className="space-y-2">
                                 {suggestion.sources.map((source, idx) => (
-                                  <div key={idx} className="p-3 bg-muted rounded-lg">
-                                    <div className="flex items-center gap-2 mb-1">
-                                      <FileText className="h-4 w-4" />
-                                      <span className="font-medium text-sm">
-                                        {source.documentName}
-                                      </span>
-                                      {source.relevanceScore && (
-                                        <Badge variant="outline" className="text-xs">
-                                          {Math.round(source.relevanceScore * 100)}% relevant
-                                        </Badge>
-                                      )}
+                                  <div
+                                    key={idx}
+                                    className={`p-3 rounded-lg border ${
+                                      source.status === 'approved'
+                                        ? 'bg-green-50 dark:bg-green-950 border-green-200'
+                                        : source.status === 'rejected'
+                                        ? 'bg-red-50 dark:bg-red-950 border-red-200 opacity-60'
+                                        : 'bg-muted'
+                                    }`}
+                                  >
+                                    <div className="flex items-center justify-between mb-1">
+                                      <div className="flex items-center gap-2">
+                                        <GripVertical className="h-4 w-4 text-muted-foreground" />
+                                        <FileText className="h-4 w-4" />
+                                        <span className="font-medium text-sm">
+                                          {source.documentName}
+                                        </span>
+                                        {source.relevanceScore && (
+                                          <Badge variant="outline" className="text-xs">
+                                            {Math.round(source.relevanceScore * 100)}% relevant
+                                          </Badge>
+                                        )}
+                                        {getDocLinkStatusBadge(source.status)}
+                                      </div>
+                                      <div className="flex items-center gap-1">
+                                        {source.status !== 'approved' && (
+                                          <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-7 w-7"
+                                            onClick={() => handleApproveDocLink(suggestion.id, idx)}
+                                            title="Approve link"
+                                          >
+                                            <Check className="h-4 w-4 text-green-600" />
+                                          </Button>
+                                        )}
+                                        {source.status !== 'rejected' && (
+                                          <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-7 w-7"
+                                            onClick={() => handleRejectDocLink(suggestion.id, idx)}
+                                            title="Reject link"
+                                          >
+                                            <X className="h-4 w-4 text-orange-600" />
+                                          </Button>
+                                        )}
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-7 w-7"
+                                          onClick={() => handleRemoveDocLink(suggestion.id, idx)}
+                                          title="Remove link"
+                                        >
+                                          <Trash2 className="h-4 w-4 text-red-500" />
+                                        </Button>
+                                      </div>
                                     </div>
                                     {source.excerpt && (
-                                      <p className="text-xs text-muted-foreground mt-1">
+                                      <p className="text-xs text-muted-foreground mt-1 pl-10">
                                         &quot;{source.excerpt}&quot;
                                       </p>
                                     )}
