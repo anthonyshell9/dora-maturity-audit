@@ -33,26 +33,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Build document query
-    interface DocumentWhereInput {
-      organizationId: string;
-      status: string;
-      id?: { in: string[] };
-    }
-
-    const documentWhere: DocumentWhereInput = {
-      organizationId,
-      status: 'COMPLETED',
-    };
-
-    // If specific documents are provided, only use those
-    if (specificDocumentIds && specificDocumentIds.length > 0) {
-      documentWhere.id = { in: specificDocumentIds };
-    }
-
     // Get documents for this organization
     const documents = await prisma.document.findMany({
-      where: documentWhere,
+      where: {
+        organizationId,
+        status: 'COMPLETED',
+        ...(specificDocumentIds && specificDocumentIds.length > 0
+          ? { id: { in: specificDocumentIds } }
+          : {}),
+      },
       include: {
         chunks: {
           take: 30, // More chunks for better context
