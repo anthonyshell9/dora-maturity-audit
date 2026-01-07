@@ -2,15 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { z } from 'zod';
 
+const DEFAULT_USER_ID = 'default-auditor';
+
 const createResponseSchema = z.object({
   questionId: z.string().min(1, 'Question ID is required'),
-  userId: z.string().min(1, 'User ID is required'),
+  userId: z.string().optional(),
   answer: z.enum(['YES', 'NO', 'NA', 'NO_ANSWER']),
   notes: z.string().nullable().optional(),
 });
 
 const bulkResponseSchema = z.object({
-  userId: z.string().min(1, 'User ID is required'),
+  userId: z.string().optional(),
   responses: z.array(z.object({
     questionId: z.string().min(1),
     answer: z.enum(['YES', 'NO', 'NA', 'NO_ANSWER']),
@@ -64,6 +66,7 @@ export async function POST(
     // Check if it's a bulk operation
     if (body.responses) {
       const validatedData = bulkResponseSchema.parse(body);
+      const userId = validatedData.userId || DEFAULT_USER_ID;
 
       const results = await Promise.all(
         validatedData.responses.map(async (r) => {
@@ -77,12 +80,12 @@ export async function POST(
             update: {
               answer: r.answer,
               notes: r.notes,
-              userId: validatedData.userId,
+              userId,
             },
             create: {
               auditId,
               questionId: r.questionId,
-              userId: validatedData.userId,
+              userId,
               answer: r.answer,
               notes: r.notes,
             },
@@ -95,6 +98,7 @@ export async function POST(
 
     // Single response
     const validatedData = createResponseSchema.parse(body);
+    const userId = validatedData.userId || DEFAULT_USER_ID;
 
     const response = await prisma.response.upsert({
       where: {
@@ -106,12 +110,12 @@ export async function POST(
       update: {
         answer: validatedData.answer,
         notes: validatedData.notes,
-        userId: validatedData.userId,
+        userId,
       },
       create: {
         auditId,
         questionId: validatedData.questionId,
-        userId: validatedData.userId,
+        userId,
         answer: validatedData.answer,
         notes: validatedData.notes,
       },
@@ -123,7 +127,7 @@ export async function POST(
 
     await prisma.auditLog.create({
       data: {
-        userId: validatedData.userId,
+        userId,
         action: 'RESPOND',
         resource: 'Response',
         resourceId: response.id,

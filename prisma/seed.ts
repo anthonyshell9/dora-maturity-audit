@@ -37,6 +37,19 @@ const CHAPTER_INFO: Record<number, { title: string; description: string }> = {
 async function main() {
   console.log('Starting database seed...');
 
+  // Create default auditor user
+  console.log('Creating default auditor user...');
+  await prisma.user.upsert({
+    where: { email: 'auditor@dora-audit.local' },
+    update: {},
+    create: {
+      id: 'default-auditor',
+      email: 'auditor@dora-audit.local',
+      name: 'Default Auditor',
+      role: 'AUDITOR',
+    },
+  });
+
   // Create chapters
   console.log('Creating chapters...');
   for (const [chapterNum, info] of Object.entries(CHAPTER_INFO)) {
