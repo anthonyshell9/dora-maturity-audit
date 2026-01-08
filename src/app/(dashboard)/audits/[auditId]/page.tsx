@@ -46,6 +46,7 @@ import {
   Plus,
   RefreshCw,
   MessageSquare,
+  Search,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -158,8 +159,21 @@ export default function AuditDetailPage({
   const [linkedDocuments, setLinkedDocuments] = useState<DocumentLink[]>([]);
   const [availableDocuments, setAvailableDocuments] = useState<Document[]>([]);
   const [selectedDocToAdd, setSelectedDocToAdd] = useState<string>("");
+  const [documentSearchQuery, setDocumentSearchQuery] = useState("");
   const [additionalContext, setAdditionalContext] = useState("");
   const [selectedDocsForAnalysis, setSelectedDocsForAnalysis] = useState<string[]>([]);
+
+  // Filter documents based on search query
+  const filteredDocuments = availableDocuments
+    .filter((d) => !linkedDocuments.some((l) => l.documentId === d.id))
+    .filter((d) => {
+      if (!documentSearchQuery) return true;
+      const query = documentSearchQuery.toLowerCase();
+      return (
+        d.name.toLowerCase().includes(query) ||
+        d.originalName.toLowerCase().includes(query)
+      );
+    });
 
   // Fetch audit data
   const fetchAudit = useCallback(async () => {
@@ -465,6 +479,21 @@ export default function AuditDetailPage({
     } catch (error) {
       console.error("Error removing link:", error);
       toast.error("Failed to remove document link");
+    }
+  };
+
+  const handleDeleteEvidence = async (evidenceId: string) => {
+    try {
+      const res = await fetch(`/api/audits/${auditId}/evidence?evidenceId=${evidenceId}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("Failed to delete evidence");
+      toast.success("Evidence file deleted");
+      fetchAudit(); // Refresh to get updated evidences
+    } catch (error) {
+      console.error("Error deleting evidence:", error);
+      toast.error("Failed to delete evidence file");
     }
   };
 
@@ -972,34 +1001,75 @@ export default function AuditDetailPage({
                           Add Document
                         </Button>
                       </DialogTrigger>
-                      <DialogContent>
+                      <DialogContent className="max-w-lg">
                         <DialogHeader>
                           <DialogTitle>Link Document</DialogTitle>
                           <DialogDescription>
-                            Select a document from your organization&apos;s document base
+                            Search and select a document from your organization&apos;s document base
                           </DialogDescription>
                         </DialogHeader>
                         <div className="space-y-4">
-                          <Select value={selectedDocToAdd} onValueChange={setSelectedDocToAdd}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select a document..." />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {availableDocuments
-                                .filter((d) => !linkedDocuments.some((l) => l.documentId === d.id))
-                                .map((doc) => (
-                                  <SelectItem key={doc.id} value={doc.id}>
-                                    {doc.originalName || doc.name}
-                                  </SelectItem>
-                                ))}
-                            </SelectContent>
-                          </Select>
+                          <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input
+                              placeholder="Search documents..."
+                              value={documentSearchQuery}
+                              onChange={(e) => setDocumentSearchQuery(e.target.value)}
+                              className="w-full pl-9"
+                            />
+                          </div>
+                          <ScrollArea className="h-[200px] border rounded-md">
+                            <div className="p-2 space-y-1">
+                              {filteredDocuments.length > 0 ? (
+                                filteredDocuments.map((doc) => (
+                                  <div
+                                    key={doc.id}
+                                    className={`p-2 rounded-md cursor-pointer transition-colors ${
+                                      selectedDocToAdd === doc.id
+                                        ? "bg-primary text-primary-foreground"
+                                        : "hover:bg-muted"
+                                    }`}
+                                    onClick={() => setSelectedDocToAdd(doc.id)}
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <FileText className="h-4 w-4 flex-shrink-0" />
+                                      <span className="text-sm truncate">
+                                        {doc.originalName || doc.name}
+                                      </span>
+                                    </div>
+                                  </div>
+                                ))
+                              ) : (
+                                <p className="text-sm text-muted-foreground text-center py-4">
+                                  {documentSearchQuery
+                                    ? "No documents match your search"
+                                    : "No documents available"}
+                                </p>
+                              )}
+                            </div>
+                          </ScrollArea>
+                          {selectedDocToAdd && (
+                            <div className="p-2 bg-muted rounded-md">
+                              <span className="text-sm font-medium">Selected: </span>
+                              <span className="text-sm">
+                                {availableDocuments.find((d) => d.id === selectedDocToAdd)?.originalName ||
+                                  availableDocuments.find((d) => d.id === selectedDocToAdd)?.name}
+                              </span>
+                            </div>
+                          )}
                         </div>
                         <DialogFooter>
-                          <Button variant="outline" onClick={() => setAddDocDialogOpen(false)}>
+                          <Button variant="outline" onClick={() => {
+                            setAddDocDialogOpen(false);
+                            setDocumentSearchQuery("");
+                            setSelectedDocToAdd("");
+                          }}>
                             Cancel
                           </Button>
-                          <Button onClick={handleAddDocumentLink} disabled={!selectedDocToAdd}>
+                          <Button onClick={() => {
+                            handleAddDocumentLink();
+                            setDocumentSearchQuery("");
+                          }} disabled={!selectedDocToAdd}>
                             Link Document
                           </Button>
                         </DialogFooter>
@@ -1109,6 +1179,13 @@ export default function AuditDetailPage({
                               <a href={ev.fileUrl} target="_blank" rel="noopener noreferrer">
                                 <Download className="h-4 w-4" />
                               </a>
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleDeleteEvidence(ev.id)}
+                            >
+                              <Trash2 className="h-4 w-4 text-red-500" />
                             </Button>
                           </div>
                         </div>

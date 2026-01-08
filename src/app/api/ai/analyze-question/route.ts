@@ -169,8 +169,8 @@ Respond in JSON format:
 
     messageContent.push({ type: 'text', text: textPrompt });
 
-    // Add images (limit to 5 images to avoid token limits)
-    const imagesToProcess = imageDocuments.slice(0, 5);
+    // Add images (limit to 200 images)
+    const imagesToProcess = imageDocuments.slice(0, 200);
     for (const imageDoc of imagesToProcess) {
       try {
         // Download image from blob storage
