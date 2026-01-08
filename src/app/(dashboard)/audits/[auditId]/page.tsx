@@ -405,13 +405,33 @@ export default function AuditDetailPage({
   };
 
   const handleAddDocumentLink = async () => {
-    if (!selectedDocToAdd || !currentResponse) {
-      toast.error("Please select a document and save the response first");
+    if (!selectedDocToAdd || !currentQuestion) {
+      toast.error("Please select a document");
       return;
     }
 
     try {
-      const res = await fetch(`/api/audits/${auditId}/responses/${currentResponse.id}/documents`, {
+      let responseId = currentResponse?.id;
+
+      // If no response exists yet, create one first
+      if (!responseId) {
+        const createRes = await fetch(`/api/audits/${auditId}/responses`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            questionId: currentQuestion.id,
+            answer: "NO_ANSWER",
+            notes: null,
+          }),
+        });
+
+        if (!createRes.ok) throw new Error("Failed to create response");
+        const newResponse = await createRes.json();
+        responseId = newResponse.id;
+        await fetchAudit(); // Refresh to get the new response
+      }
+
+      const res = await fetch(`/api/audits/${auditId}/responses/${responseId}/documents`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -947,7 +967,7 @@ export default function AuditDetailPage({
                     </div>
                     <Dialog open={addDocDialogOpen} onOpenChange={setAddDocDialogOpen}>
                       <DialogTrigger asChild>
-                        <Button variant="outline" size="sm" disabled={!currentResponse}>
+                        <Button variant="outline" size="sm" disabled={availableDocuments.length === 0}>
                           <Plus className="h-4 w-4 mr-2" />
                           Add Document
                         </Button>
@@ -987,9 +1007,9 @@ export default function AuditDetailPage({
                     </Dialog>
                   </div>
 
-                  {!currentResponse && (
+                  {availableDocuments.length === 0 && (
                     <p className="text-sm text-muted-foreground">
-                      Save your response first to link documents
+                      No documents available. Upload documents in AI Analysis first.
                     </p>
                   )}
 
@@ -1023,7 +1043,7 @@ export default function AuditDetailPage({
                         </div>
                       ))}
                     </div>
-                  ) : currentResponse ? (
+                  ) : availableDocuments.length > 0 ? (
                     <p className="text-sm text-muted-foreground">
                       No documents linked yet. Add from your document base or run AI analysis.
                     </p>
