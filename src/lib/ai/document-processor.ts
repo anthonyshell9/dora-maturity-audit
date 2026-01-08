@@ -1,6 +1,15 @@
 import prisma from '@/lib/prisma';
 import { chunkText, generateSimpleEmbedding } from './anthropic';
 import pdf from 'pdf-parse';
+import * as XLSX from 'xlsx';
+
+// Image file types that Claude can analyze directly
+const IMAGE_TYPES = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/bmp'];
+
+// Check if file type is an image
+export function isImageType(fileType: string): boolean {
+  return IMAGE_TYPES.includes(fileType.toLowerCase());
+}
 
 // Extract text from different file types
 export async function extractText(buffer: Buffer, fileType: string): Promise<string> {
@@ -18,12 +27,50 @@ export async function extractText(buffer: Buffer, fileType: string): Promise<str
     return buffer.toString('utf-8');
   }
 
+  if (type === 'csv' || type === 'text/csv' || type === 'application/csv') {
+    return buffer.toString('utf-8');
+  }
+
+  // Excel files
+  if (type === 'xlsx' || type === 'xls' ||
+      type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+      type === 'application/vnd.ms-excel') {
+    return extractExcelText(buffer);
+  }
+
+  // Image files - return a description placeholder, actual analysis done by Claude Vision
+  if (isImageType(type)) {
+    return `[IMAGE FILE - This is an image document. Content will be analyzed by AI vision during question analysis.]`;
+  }
+
   // For other types, try to read as text
-  // In production, you would add support for DOCX, XLSX, etc.
   try {
     return buffer.toString('utf-8');
   } catch {
     throw new Error(`Unsupported file type: ${fileType}`);
+  }
+}
+
+// Extract text from Excel files
+function extractExcelText(buffer: Buffer): string {
+  try {
+    const workbook = XLSX.read(buffer, { type: 'buffer' });
+    const textParts: string[] = [];
+
+    for (const sheetName of workbook.SheetNames) {
+      const sheet = workbook.Sheets[sheetName];
+      textParts.push(`=== Sheet: ${sheetName} ===`);
+
+      // Convert sheet to CSV format for text extraction
+      const csv = XLSX.utils.sheet_to_csv(sheet);
+      textParts.push(csv);
+      textParts.push('');
+    }
+
+    return textParts.join('\n');
+  } catch (error) {
+    console.error('Error extracting Excel text:', error);
+    throw new Error('Failed to extract text from Excel file');
   }
 }
 

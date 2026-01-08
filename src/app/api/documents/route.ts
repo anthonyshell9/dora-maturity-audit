@@ -12,6 +12,16 @@ const ALLOWED_TYPES = [
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   'application/msword',
   'application/vnd.ms-excel',
+  // Images
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'image/gif',
+  'image/webp',
+  'image/bmp',
+  // CSV
+  'text/csv',
+  'application/csv',
 ];
 
 export async function GET(request: NextRequest) {
@@ -82,9 +92,11 @@ export async function POST(request: NextRequest) {
 
     // Validate file type
     const fileType = file.type || getFileTypeFromName(file.name);
-    if (!ALLOWED_TYPES.includes(fileType) && !file.name.endsWith('.md') && !file.name.endsWith('.txt')) {
+    const allowedExtensions = ['.md', '.txt', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.csv'];
+    const hasAllowedExtension = allowedExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
+    if (!ALLOWED_TYPES.includes(fileType) && !hasAllowedExtension) {
       return NextResponse.json(
-        { error: `File type not allowed: ${fileType}. Allowed types: PDF, TXT, MD, DOCX, XLSX` },
+        { error: `File type not allowed: ${fileType}. Allowed types: PDF, TXT, MD, DOCX, XLSX, CSV, PNG, JPG, GIF, WEBP` },
         { status: 400 }
       );
     }
@@ -163,6 +175,13 @@ function getFileTypeFromName(fileName: string): string {
     xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     doc: 'application/msword',
     xls: 'application/vnd.ms-excel',
+    csv: 'text/csv',
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    gif: 'image/gif',
+    webp: 'image/webp',
+    bmp: 'image/bmp',
   };
   return typeMap[ext || ''] || 'application/octet-stream';
 }

@@ -1,6 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import Anthropic from '@anthropic-ai/sdk';
+import { isImageType } from '@/lib/ai/document-processor';
+import { downloadBlob } from '@/lib/storage/azure-blob';
+
+// Image types for Claude Vision
+const IMAGE_MEDIA_TYPES: Record<string, 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp'> = {
+  'png': 'image/png',
+  'jpg': 'image/jpeg',
+  'jpeg': 'image/jpeg',
+  'gif': 'image/gif',
+  'webp': 'image/webp',
+  'image/png': 'image/png',
+  'image/jpeg': 'image/jpeg',
+  'image/gif': 'image/gif',
+  'image/webp': 'image/webp',
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -61,11 +76,15 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Combine document chunks
+    // Separate text documents from image documents
+    const textDocuments = documents.filter(doc => !isImageType(doc.fileType));
+    const imageDocuments = documents.filter(doc => isImageType(doc.fileType));
+
+    // Combine text document chunks
     let documentContext = '';
 
-    if (documents.length > 0) {
-      documentContext = documents
+    if (textDocuments.length > 0) {
+      documentContext = textDocuments
         .flatMap((doc) =>
           doc.chunks.map((chunk) => `[From ${doc.originalName || doc.name}]:\n${chunk.content}`)
         )
@@ -80,7 +99,8 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    if (!documentContext) {
+    // Check if we have any content (text or images)
+    if (!documentContext && imageDocuments.length === 0) {
       return NextResponse.json({
         suggestion: 'INSUFFICIENT_INFO',
         confidence: 0,
@@ -100,14 +120,16 @@ export async function POST(request: NextRequest) {
       : '';
 
     const systemPrompt = `You are a DORA (Digital Operational Resilience Act) compliance expert.
-Your task is to analyze documents and determine if they provide evidence for compliance with specific DORA requirements.
+Your task is to analyze documents (including images) and determine if they provide evidence for compliance with specific DORA requirements.
 
-Based on the provided documents, you must:
+Based on the provided documents and images, you must:
 1. Determine if the organization complies with the requirement (YES, NO, PARTIAL, or INSUFFICIENT_INFO)
 2. Provide a confidence score (0.0 to 1.0)
 3. Explain your reasoning with specific references to the documents
 4. Suggest what evidence description the auditor should write
 5. List the specific documents that support your analysis
+
+For images, analyze any visible text, diagrams, charts, policies, or relevant visual information.
 
 Respond in JSON format:
 {
@@ -125,13 +147,58 @@ Respond in JSON format:
   ]
 }`;
 
-    const userPrompt = `DORA Compliance Question:
-${questionText}${contextSection}
+    // Build the message content with text and images
+    const messageContent: Anthropic.MessageCreateParams['messages'][0]['content'] = [];
 
-Available Documents:
-${documentContext.substring(0, 60000)}
+    // Add text content first
+    let textPrompt = `DORA Compliance Question:\n${questionText}${contextSection}\n\n`;
 
-Analyze these documents and determine compliance with the question above.`;
+    if (documentContext) {
+      textPrompt += `Available Text Documents:\n${documentContext.substring(0, 50000)}\n\n`;
+    }
+
+    if (imageDocuments.length > 0) {
+      textPrompt += `The following ${imageDocuments.length} image(s) are also provided for analysis:\n`;
+      imageDocuments.forEach((doc, idx) => {
+        textPrompt += `- Image ${idx + 1}: ${doc.originalName || doc.name}\n`;
+      });
+      textPrompt += '\n';
+    }
+
+    textPrompt += 'Analyze all provided documents and images to determine compliance with the question above.';
+
+    messageContent.push({ type: 'text', text: textPrompt });
+
+    // Add images (limit to 5 images to avoid token limits)
+    const imagesToProcess = imageDocuments.slice(0, 5);
+    for (const imageDoc of imagesToProcess) {
+      try {
+        // Download image from blob storage
+        const blobName = imageDoc.fileUrl.split('/').slice(-2).join('/');
+        const imageBuffer = await downloadBlob(blobName);
+        const base64Image = imageBuffer.toString('base64');
+
+        // Determine media type
+        const mediaType = IMAGE_MEDIA_TYPES[imageDoc.fileType.toLowerCase()] || 'image/jpeg';
+
+        messageContent.push({
+          type: 'image',
+          source: {
+            type: 'base64',
+            media_type: mediaType,
+            data: base64Image,
+          },
+        });
+
+        messageContent.push({
+          type: 'text',
+          text: `[Above image: ${imageDoc.originalName || imageDoc.name}]`,
+        });
+      } catch (error) {
+        console.error(`Error loading image ${imageDoc.id}:`, error);
+        // Continue with other images if one fails
+      }
+    }
 
     const aiResponse = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
@@ -139,7 +206,7 @@ Analyze these documents and determine compliance with the question above.`;
       messages: [
         {
           role: 'user',
-          content: userPrompt,
+          content: messageContent,
         },
       ],
       system: systemPrompt,
